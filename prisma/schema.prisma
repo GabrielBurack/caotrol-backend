@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -12,4 +6,213 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model agendamento {
+  id_agenda      Int                @id @default(autoincrement())
+  data_agenda    DateTime           @db.Timestamp(6)
+  data_exec      DateTime           @db.Timestamp(6)
+  data_conf      DateTime?          @db.Timestamp(6)
+  data_cancel    DateTime?          @db.Timestamp(6)
+  status         status_agenda_enum
+  id_tutor       Int
+  id_veterinario Int
+  id_animal      Int
+  id_consulta    Int?
+  id_usuario     Int
+  animal         animal             @relation(fields: [id_animal], references: [id_animal], map: "fk_agendamento_animal")
+  consulta       consulta?          @relation(fields: [id_consulta], references: [id_consulta], map: "fk_agendamento_consulta")
+  tutor          tutor              @relation(fields: [id_tutor], references: [id_tutor], map: "fk_agendamento_tutor")
+  usuario        usuario            @relation(fields: [id_usuario], references: [id_usuario], map: "fk_agendamento_usuario")
+  veterinario    veterinario        @relation(fields: [id_veterinario], references: [id_veterinario], map: "fk_agendamento_veterinario")
+}
+
+model anamnese {
+  id_anamnese Int      @id @default(autoincrement())
+  castrado    Boolean?
+  alergias    String?
+  obs         String?
+  id_consulta Int
+  consulta    consulta @relation(fields: [id_consulta], references: [id_consulta], map: "fk_anamnese_consulta")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model animal {
+  id_animal    Int                @id @default(autoincrement())
+  nome         String             @db.VarChar(100)
+  data_nasc    DateTime           @db.Date
+  sexo         sexo_enum
+  temperamento temperamento_enum?
+  porte        porte_enum?
+  ativo        Boolean            @default(true)
+  id_tutor     Int
+  id_raca      Int
+  agendamento  agendamento[]
+  raca         raca               @relation(fields: [id_raca], references: [id_raca], map: "fk_animal_raca")
+  tutor        tutor              @relation(fields: [id_tutor], references: [id_tutor], map: "fk_animal_tutor")
+  consulta     consulta[]
+  vacina       vacina[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model cidade {
+  id_cidade Int     @id @default(autoincrement())
+  nome      String  @db.VarChar(100)
+  id_estado Int
+  estado    estado  @relation(fields: [id_estado], references: [id_estado], map: "fk_cidade_estado")
+  tutor     tutor[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model consulta {
+  id_consulta    Int                  @id @default(autoincrement())
+  data           DateTime             @db.Timestamp(6)
+  freq           Decimal?             @db.Decimal(4, 2)
+  resp           Decimal?             @db.Decimal(4, 2)
+  tpc            Decimal?             @db.Decimal(4, 2)
+  peso           Decimal?             @db.Decimal(4, 2)
+  status         status_consulta_enum
+  temperatura    Decimal?             @db.Decimal(4, 1)
+  queixa         String?
+  suspeita       String?
+  diagnostico    String?
+  tratamento     String?
+  mucosas        String?              @db.VarChar(255)
+  id_animal      Int
+  id_veterinario Int
+  agendamento    agendamento[]
+  anamnese       anamnese[]
+  animal         animal               @relation(fields: [id_animal], references: [id_animal], map: "fk_consulta_animal")
+  veterinario    veterinario          @relation(fields: [id_veterinario], references: [id_veterinario], map: "fk_consulta_veterinario")
+  exame          exame[]
+  prescricao     prescricao[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model especie {
+  id_especie Int    @id @default(autoincrement())
+  nome       String @db.VarChar(100)
+  raca       raca[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model estado {
+  id_estado Int      @id @default(autoincrement())
+  nome      String   @db.VarChar(50)
+  uf        String   @unique @db.Char(2)
+  cidade    cidade[]
+}
+
+model exame {
+  id_exame    Int      @id @default(autoincrement())
+  solicitacao String?
+  resultado   String?
+  id_consulta Int
+  consulta    consulta @relation(fields: [id_consulta], references: [id_consulta], onDelete: Cascade, map: "fk_exame_consulta")
+}
+
+model prescricao {
+  id_prescricao Int      @id @default(autoincrement())
+  descricao     String?
+  id_consulta   Int
+  consulta      consulta @relation(fields: [id_consulta], references: [id_consulta], onDelete: Cascade, map: "fk_prescricao_consulta")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model raca {
+  id_raca    Int      @id @default(autoincrement())
+  nome       String   @db.VarChar(100)
+  id_especie Int
+  animal     animal[]
+  especie    especie  @relation(fields: [id_especie], references: [id_especie], onDelete: Cascade, map: "fk_raca_especie")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tutor {
+  id_tutor    Int           @id @default(autoincrement())
+  nome        String        @db.VarChar(255)
+  cpf         String        @unique @db.VarChar(14)
+  data_nasc   DateTime?     @db.Date
+  telefone    String        @db.VarChar(20)
+  cep         String?       @db.VarChar(8)
+  rua         String?       @db.VarChar(255)
+  num         String?       @db.VarChar(10)
+  bairro      String?       @db.VarChar(100)
+  ativo       Boolean       @default(true)
+  id_cidade   Int?
+  agendamento agendamento[]
+  animal      animal[]
+  cidade      cidade?       @relation(fields: [id_cidade], references: [id_cidade], onDelete: NoAction, onUpdate: NoAction, map: "fk_tutor_cidade")
+  usuario     usuario[]
+}
+
+model usuario {
+  id_usuario     Int               @id @default(autoincrement())
+  login          String            @unique @db.VarChar(50)
+  senha          String            @db.VarChar(255)
+  tipo           tipo_usuario_enum
+  id_tutor       Int?
+  id_veterinario Int?
+  agendamento    agendamento[]
+  tutor          tutor?            @relation(fields: [id_tutor], references: [id_tutor], map: "fk_usuario_tutor")
+  veterinario    veterinario?      @relation(fields: [id_veterinario], references: [id_veterinario], map: "fk_usuario_veterinario")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model vacina {
+  id_vacina  Int       @id @default(autoincrement())
+  nome       String    @db.VarChar(100)
+  data_aplic DateTime  @db.Date
+  data_prox  DateTime? @db.Date
+  status     String?   @db.VarChar(50)
+  id_animal  Int
+  animal     animal    @relation(fields: [id_animal], references: [id_animal], onDelete: Cascade, map: "fk_vacina_animal")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model veterinario {
+  id_veterinario Int           @id @default(autoincrement())
+  nome           String        @db.VarChar(255)
+  cpf            String        @unique @db.VarChar(14)
+  crmv           String        @unique @db.VarChar(20)
+  agendamento    agendamento[]
+  consulta       consulta[]
+  usuario        usuario[]
+}
+
+enum porte_enum {
+  pequeno
+  medio
+  grande
+}
+
+enum sexo_enum {
+  M
+  F
+}
+
+enum status_agenda_enum {
+  pendente
+  agendada
+  confirmada
+  cancelada
+}
+
+enum status_consulta_enum {
+  pendente
+  finalizada
+  cancelada
+}
+
+enum temperamento_enum {
+  tranquilo
+  agressivo
+  medroso
+}
+
+enum tipo_usuario_enum {
+  padrao
+  veterinario
+  admin
 }
