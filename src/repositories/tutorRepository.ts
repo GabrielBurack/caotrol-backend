@@ -40,6 +40,7 @@ class TutorRepository {
             where: { id_tutor: id },
             data: { ativo: false }
         });
+        // **Desativar todos os animais desse tutor**
     }
 
     // (Opcional) Delete real — somente para casos de manutenção/admin
