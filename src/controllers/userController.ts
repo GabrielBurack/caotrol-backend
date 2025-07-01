@@ -4,7 +4,7 @@ import userService from "../services/userService";
 class UserController {
     async register(req: Request, res: Response){
         try {
-            const user = userService.register(req.body);
+            const user = await userService.register(req.body);
             res.status(201).json(user);
 
         } catch (error) {

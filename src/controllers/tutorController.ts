@@ -49,10 +49,10 @@ class TutorController {
         }
     }
 
-    async delete(req: Request, res: Response) {
+    async deactivate(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            await tutorService.delete(id);
+            await tutorService.deactivate(id);
             res.status(204).send(); // 204 No Content é uma resposta comum para delete bem-sucedido
         } catch (error) {
             res.status(500).json({ message: 'Erro ao deletar tutor', error });

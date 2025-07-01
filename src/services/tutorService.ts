@@ -21,9 +21,9 @@ class TutorService {
         return tutorRepository.update(id, data);
     }
 
-    async delete(id: number): Promise<tutor> {
+    async deactivate(id: number): Promise<tutor> {
         // Regra de negócio: Poderíamos verificar se o tutor a ser deletado não tem animais associados
-        return tutorRepository.delete(id);
+        return tutorRepository.deactivate(id);
     }
 }
 
