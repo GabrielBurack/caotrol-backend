@@ -7,7 +7,7 @@ class TutorRepository {
         return prisma.tutor.create({
             data: {
                 ...data,
-                ativo: true // garante que novo tutor esteja ativo
+                ativo: true 
             }
         });
     }
@@ -49,6 +49,8 @@ class TutorRepository {
             where: { id_tutor: id }
         });
     }
+
+    // ?? Perguntar ao professor se precisa de um Reactivate
 }
 
 export default new TutorRepository();
