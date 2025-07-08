@@ -1,4 +1,3 @@
-// src/routes/auth.routes.ts - NOVO ARQUIVO
 import { Router } from 'express';
 import authController from '../controllers/authController';
 

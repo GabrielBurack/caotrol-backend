@@ -4,6 +4,7 @@ import userRouter from "./routes/userRoutes";
 import authRouter from "./routes/authRoutes";
 import especieRouter from "./routes/especieRoutes";
 import racaRouter from "./routes/racaRoutes";
+import animalRouter from "./routes/animalRoutes";
 
 const app = express();
 const port = 3000;
@@ -15,6 +16,7 @@ app.use('/api', userRouter);
 app.use('/api', authRouter);
 app.use('/api', especieRouter);
 app.use('/api', racaRouter);
+app.use('/api', animalRouter);
 
 
 app.listen(port, () => {
