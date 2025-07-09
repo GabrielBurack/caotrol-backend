@@ -6,6 +6,8 @@ import especieRouter from "./routes/especieRoutes";
 import racaRouter from "./routes/racaRoutes";
 import animalRouter from "./routes/animalRoutes";
 import veterinarioRouter from "./routes/veterinarioRoutes";
+import tarefasAgendadasService from "./services/tarefasAgendadasService";
+import agendamentoRouter from "./routes/agendamentoRoutes";
 
 const app = express();
 const port = 3000;
@@ -19,6 +21,9 @@ app.use('/api', especieRouter);
 app.use('/api', racaRouter);
 app.use('/api', animalRouter);
 app.use('/api', veterinarioRouter);
+app.use('/api', agendamentoRouter);
+
+tarefasAgendadasService.iniciar();
 
 
 app.listen(port, () => {
