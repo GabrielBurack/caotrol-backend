@@ -9,6 +9,7 @@ import veterinarioRouter from "./routes/veterinarioRoutes";
 import tarefasAgendadasService from "./services/tarefasAgendadasService";
 import agendamentoRouter from "./routes/agendamentoRoutes";
 import consultaRouter from "./routes/consultaRoutes";
+import anamneseRouter from "./routes/anamneseRoutes";
 
 const app = express();
 const port = 3000;
@@ -24,6 +25,7 @@ app.use('/api', animalRouter);
 app.use('/api', veterinarioRouter);
 app.use('/api', agendamentoRouter);
 app.use('/api', consultaRouter);
+app.use('/api', anamneseRouter);
 
 
 tarefasAgendadasService.iniciar();

@@ -25,6 +25,7 @@ const HORARIOS_FIXOS = [
 ];
 
 //**Refatorar o codigo para ficar modularizado.
+
 class AgendamentoService {
   async listarHorariosDisponiveis(
     id_veterinario: number,
