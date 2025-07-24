@@ -9,6 +9,12 @@ class UserRepository {
     async findByLogin(login: string): Promise<usuario | null> {
         return prisma.usuario.findUnique({ where: { login } });
     }
+
+    async findById(id: number): Promise<usuario | null> {
+    return prisma.usuario.findUnique({
+      where: { id_usuario: id },
+    });
+  }
 }
 
 export default new UserRepository();

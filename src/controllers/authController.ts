@@ -10,7 +10,7 @@ class AuthController {
             if (!token) {
                 return res.status(401).json({ message: 'Login ou senha inválidos' });
             }
-
+            
             res.status(200).json({ token });
         } catch (error: any) {
             console.error(error);

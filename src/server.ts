@@ -10,6 +10,7 @@ import tarefasAgendadasService from "./services/tarefasAgendadasService";
 import agendamentoRouter from "./routes/agendamentoRoutes";
 import consultaRouter from "./routes/consultaRoutes";
 import anamneseRouter from "./routes/anamneseRoutes";
+import dashboardRouter from "./routes/dashboardRoutes";
 
 const app = express();
 const port = 3000;
@@ -26,6 +27,7 @@ app.use('/api', veterinarioRouter);
 app.use('/api', agendamentoRouter);
 app.use('/api', consultaRouter);
 app.use('/api', anamneseRouter);
+app.use('/api', dashboardRouter);
 
 
 tarefasAgendadasService.iniciar();
