@@ -1,4 +1,4 @@
-import { agendamento } from "@prisma/client";
+import { agendamento, Prisma } from "@prisma/client";
 import agendamentoRepository from "../repositories/agendamentoRepository";
 import tutorRepository from "../repositories/tutorRepository";
 import animalRepository from "../repositories/animalRepository";
@@ -23,6 +23,14 @@ const HORARIOS_FIXOS = [
   "17:30",
   "18:00",
 ];
+
+type AgendamentoComRelacoes = Prisma.agendamentoGetPayload<{
+  include: {
+    animal: { select: { nome: true } },
+    tutor: { select: { nome: true } },
+    veterinario: { select: { nome: true } },
+  };
+}>;
 
 //**Refatorar o codigo para ficar modularizado.
 
@@ -177,6 +185,21 @@ class AgendamentoService {
       status: "cancelada",
       data_cancel: new Date(),
     });
+  }
+
+  /**
+   * Busca todos os agendamentos dentro de um intervalo de datas específico.
+   * Ideal para alimentar calendários como o FullCalendar.
+   * @param dataInicio - A data de início do período.
+   * @param dataFim - A data de fim do período.
+   */
+  async buscarPorPeriodo(dataInicio: Date, dataFim: Date):Promise<AgendamentoComRelacoes[]> {
+    // A lógica de negócio aqui é simples: apenas repassamos para o repositório.
+    // Poderíamos adicionar lógicas de permissão no futuro, se necessário.
+     return agendamentoRepository.findByDateRange(
+      dataInicio,
+      dataFim
+    ) as unknown as AgendamentoComRelacoes[];
   }
 }
 

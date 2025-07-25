@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import consultaService from '../services/consultaService';
+import consultaRepository from '../repositories/consultaRepository';
 
 class ConsultaController {
   
@@ -23,7 +24,8 @@ class ConsultaController {
       // O corpo da requisição deve conter os IDs e os dados clínicos
       const { ids, dadosConsulta } = req.body;
       if (!ids || !dadosConsulta) {
-        return res.status(400).json({ message: 'O corpo da requisição deve conter "ids" e "dadosConsulta".' });
+        res.status(400).json({ message: 'O corpo da requisição deve conter "ids" e "dadosConsulta".' });
+        return;
       }
 
       const novaConsulta = await consultaService.registrarConsultaSemAgendamento(ids, dadosConsulta);
@@ -54,7 +56,8 @@ class ConsultaController {
           const id_consulta = parseInt(req.params.id_consulta);
           const consulta = await consultaRepository.findById(id_consulta); // Supondo que o método esteja no repositório
           if (!consulta) {
-              return res.status(404).json({ message: 'Consulta não encontrada.' });
+              res.status(404).json({ message: 'Consulta não encontrada.' });
+              return;
           }
           res.status(200).json(consulta);
       } catch (error: any) {
@@ -62,8 +65,5 @@ class ConsultaController {
       }
   }
 }
-
-// Para usar as funções do repositório aqui, você precisaria importá-lo:
-import consultaRepository from '../repositories/consultaRepository';
 
 export default new ConsultaController();

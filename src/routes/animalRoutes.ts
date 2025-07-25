@@ -1,15 +1,16 @@
 import { Router } from 'express';
 import animalController from '../controllers/animalController';
 import consultaController from '../controllers/consultaController';
+import authMiddleware from '../middlewares/authMiddleware';
 
 const animalRouter = Router();
 
-animalRouter.post('/animais', animalController.create);
-animalRouter.get('/animais', animalController.findAll);
-animalRouter.get('/animais/:id', animalController.findById);
-animalRouter.put('/animais/:id', animalController.update);
-animalRouter.delete('/animais/:id/deactivate', animalController.deactivate);
+animalRouter.post('/animais', authMiddleware, animalController.create);
+animalRouter.get('/animais', authMiddleware, animalController.findAll);
+animalRouter.get('/animais/:id', authMiddleware, animalController.findById);
+animalRouter.put('/animais/:id', authMiddleware, animalController.update);
+animalRouter.delete('/animais/:id/deactivate', authMiddleware, animalController.deactivate);
 
-animalRouter.get('/animais/:id_animal/consultas', consultaController.buscarConsultasDoAnimal);
+animalRouter.get('/animais/:id_animal/consultas', authMiddleware, consultaController.buscarConsultasDoAnimal);
 
 export default animalRouter;

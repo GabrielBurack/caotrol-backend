@@ -58,15 +58,17 @@ class RacaController {
 
                 // Se o código do erro é P2003 (falha de chave estrangeira)
                 if (error.code === 'P2003') {
-                    return res.status(409).json({
+                    res.status(409).json({
                         message: 'Erro: Esta raça não pode ser deletada pois está associada a um ou mais animais.'
                     });
+                    return
                 }
             }
 
-            return res.status(400).json({
+            res.status(400).json({
                 message: error.message || 'Ocorreu um erro inesperado.'
             });
+            return
         }
     }
 }
