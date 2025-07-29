@@ -26,9 +26,9 @@ const HORARIOS_FIXOS = [
 
 type AgendamentoComRelacoes = Prisma.agendamentoGetPayload<{
   include: {
-    animal: { select: { nome: true } },
-    tutor: { select: { nome: true } },
-    veterinario: { select: { nome: true } },
+    animal: { select: { nome: true } };
+    tutor: { select: { nome: true } };
+    veterinario: { select: { nome: true } };
   };
 }>;
 
@@ -193,10 +193,13 @@ class AgendamentoService {
    * @param dataInicio - A data de início do período.
    * @param dataFim - A data de fim do período.
    */
-  async buscarPorPeriodo(dataInicio: Date, dataFim: Date):Promise<AgendamentoComRelacoes[]> {
+  async buscarPorPeriodo(
+    dataInicio: Date,
+    dataFim: Date
+  ): Promise<AgendamentoComRelacoes[]> {
     // A lógica de negócio aqui é simples: apenas repassamos para o repositório.
     // Poderíamos adicionar lógicas de permissão no futuro, se necessário.
-     return agendamentoRepository.findByDateRange(
+    return agendamentoRepository.findByDateRange(
       dataInicio,
       dataFim
     ) as unknown as AgendamentoComRelacoes[];
