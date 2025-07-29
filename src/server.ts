@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import tutorRouter from "./routes/tutorRoutes";
 import userRouter from "./routes/userRoutes";
 import authRouter from "./routes/authRoutes";
@@ -14,6 +15,12 @@ import dashboardRouter from "./routes/dashboardRoutes";
 
 const app = express();
 const port = 3000;
+
+app.use(cors({
+    origin: ['http://localhost:5174', 'http://localhost:5173'], // Permite requisições do seu frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }));
 
 app.use(express.json());
 
