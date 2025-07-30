@@ -9,5 +9,9 @@ tutorRouter.post('/tutores', authMiddleware, tutorController.create);
 tutorRouter.get('/tutores/:id', authMiddleware, tutorController.findById);
 tutorRouter.put('/tutores/:id', authMiddleware, tutorController.update);
 tutorRouter.delete('/tutores/:id', authMiddleware, tutorController.deactivate);
+tutorRouter.get('/tutores/:id/animais', authMiddleware, tutorController.findAnimaisDoTutor);
+tutorRouter.get('/tutores/:id/animais', authMiddleware, tutorController.findAnimaisDoTutor);
+
+
 
 export default tutorRouter;

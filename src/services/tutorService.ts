@@ -1,5 +1,7 @@
 import tutorRepository from "../repositories/tutorRepository";
 import { tutor } from "@prisma/client";
+import animalRepository from "../repositories/animalRepository"; 
+
 
 class TutorService {
 
@@ -11,7 +13,17 @@ class TutorService {
     async findAll(): Promise<tutor[]> {
         return tutorRepository.findAll();
     }
-
+   
+    async findAnimaisDoTutor(id_tutor: number) {
+        // Validação: verifica se o tutor existe antes de buscar os animais
+        const tutorExiste = await tutorRepository.findById(id_tutor);
+        if (!tutorExiste) {
+            throw new Error("Tutor não encontrado.");
+        }
+        
+        // Chama o repositório de ANIMAIS para buscar os animais daquele tutor
+        return animalRepository.findAllByTutorId(id_tutor);
+    }
     async findById(id: number): Promise<tutor | null>{
         return tutorRepository.findById(id);
     }

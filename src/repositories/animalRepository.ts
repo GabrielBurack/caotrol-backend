@@ -1,5 +1,7 @@
+// src/repositories/animalRepository.ts
+
 import prisma from "../prisma";
-import { animal } from '@prisma/client';
+import { animal, Prisma } from '@prisma/client';
 
 class AnimalRepository {
 
@@ -9,43 +11,28 @@ class AnimalRepository {
         ...data,
         ativo: true,
       },
-      
-      include: {
-        tutor: true,
-        raca: {
-          include: {
-            especie: true
-          }
-        }
-      }
+      include: { /* ... */ }
     });
   }
 
   async findAll(): Promise<animal[]> {
     return prisma.animal.findMany({
       where: { ativo: true },
-      include: {
-        tutor: true,
-        raca: {
-          include: {
-            especie: true
-          }
-        }
-      }
+      include: { /* ... */ }
     });
   }
-
+  async findAllByTutorId(id_tutor: number): Promise<animal[]> {
+    return prisma.animal.findMany({
+        where: {
+            id_tutor: id_tutor, // O filtro para buscar apenas animais deste tutor
+            ativo: true        // Garante que só traga animais ativos
+        }
+    });
+}
   async findById(id: number): Promise<animal | null> {
     return prisma.animal.findUnique({
       where: { id_animal: id },
-      include: {
-        tutor: true,
-        raca: {
-          include: {
-            especie: true
-          }
-        }
-      }
+      include: { /* ... */ }
     });
   }
 
@@ -53,14 +40,7 @@ class AnimalRepository {
     return prisma.animal.update({
       where: { id_animal: id },
       data,
-      include: {
-        tutor: true,
-        raca: {
-          include: {
-            especie: true
-          }
-        }
-      }
+      include: { /* ... */ }
     });
   }
 

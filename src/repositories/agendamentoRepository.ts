@@ -52,31 +52,27 @@ class AgendamentoRepository {
    * @param dataFim - Data de fim do intervalo.
    * @param id_veterinario - (Opcional) ID do veterinário para filtrar.
    */
-  async findByDateRange(
-    dataInicio: Date,
-    dataFim: Date,
-    id_veterinario?: number
-  ): Promise<agendamento[]> {
+  async findByDateRange(dataInicio: Date, dataFim: Date, id_veterinario?: number): Promise<agendamento[]> {
     return prisma.agendamento.findMany({
       where: {
+        // ✅ CORREÇÃO APLICADA AQUI 👇
         data_exec: {
-          gte: dataInicio, // gte: Greater Than or Equal (Maior ou igual a)
-          lte: dataFim, // lte: Less Than or Equal (Menor ou igual a)
+          gte: dataInicio, // gte: Maior ou igual a data de início
+          lt: dataFim,     // lt: Menor que a data de fim
         },
-        id_veterinario: id_veterinario, // Se id_veterinario for undefined, o Prisma ignora o filtro
-        // Filtramos para não incluir agendamentos cancelados na visualização da agenda
+        id_veterinario: id_veterinario,
         status: {
-          not: "cancelada",
-        },
+          not: 'cancelada'
+        }
       },
       include: {
         tutor: { select: { nome: true } },
         animal: { select: { nome: true } },
-        veterinario: { select: { nome: true } },
+        veterinario: { select: { nome: true } }
       },
       orderBy: {
-        data_exec: "asc",
-      },
+        data_exec: 'asc'
+      }
     });
   }
   /**

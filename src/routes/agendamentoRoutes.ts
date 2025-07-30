@@ -10,9 +10,5 @@ agendamentoRouter.get('/agendamentos/horarios-disponiveis', authMiddleware, agen
 agendamentoRouter.post('/agendamentos', authMiddleware, agendamentoController.agendar);
 agendamentoRouter.patch('/agendamentos/:id/confirmar', authMiddleware, agendamentoController.confirmar);
 agendamentoRouter.patch('/agendamentos/:id/cancelar', authMiddleware, agendamentoController.cancelar);
-agendamentoRouter.get('/agendamentos', authMiddleware, agendamentoController.buscarPorPeriodo);
-
-// Rota para transformar um agendamento em uma consulta
-agendamentoRouter.post('/agendamentos/:id_agendamento/consulta', authMiddleware, consultaController.registrarConsultaAgendada);
-
+agendamentoRouter.get('/agendamentos', authMiddleware, agendamentoController.buscarPorPeriodo); 
 export default agendamentoRouter;

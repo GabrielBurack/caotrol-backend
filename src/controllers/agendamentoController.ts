@@ -25,10 +25,12 @@ class AgendamentoController {
       // Validação mais robusta dos parâmetros
       if (isNaN(id_veterinario) || !dia) {
         // Correção: ajustado o 'return' e melhorada a validação
-        res.status(400).json({
-          message:
-            "Os parâmetros id_veterinario (numérico) e dia (texto) são obrigatórios.",
-        });
+        res
+          .status(400)
+          .json({
+            message:
+              "Os parâmetros id_veterinario (numérico) e dia (texto) são obrigatórios.",
+          });
         return;
       }
 
@@ -126,35 +128,36 @@ class AgendamentoController {
       const { start, end } = req.query;
 
       if (!start || !end) {
-        res
-          .status(400)
-          .json({ message: 'Os parâmetros "start" e "end" são obrigatórios.' });
-        return;
+        return res.status(400).json({ message: 'Os parâmetros "start" e "end" são obrigatórios.' });
       }
 
       const dataInicio = new Date(start as string);
       const dataFim = new Date(end as string);
 
-      // 3. Use o novo tipo para 'agendamentos'
-      const agendamentos: AgendamentoComRelacoes[] =
-        await agendamentoService.buscarPorPeriodo(dataInicio, dataFim);
-
-      const eventos = agendamentos.map((ag) => ({
+      const agendamentos: AgendamentoComRelacoes[] = await agendamentoService.buscarPorPeriodo(dataInicio, dataFim);
+      
+      // Formata os dados para o padrão que o FullCalendar espera
+      const eventosFormatados = agendamentos.map(ag => ({
         id: ag.id_agenda,
-        title: `${ag.animal.nome} - ${ag.tutor.nome}`, // Agora o TypeScript sabe que 'animal' e 'tutor' existem
-        start: ag.data_exec,
-        end: new Date(new Date(ag.data_exec).getTime() + 60 * 60 * 1000),
-        extendedProps: {
-          veterinario: ag.veterinario.nome,
-          status: ag.status,
+        title: `${ag.animal.nome} - ${ag.tutor.nome}`,
+        start: ag.data_exec, // O FullCalendar vai lidar com o fuso horário
+        extendedProps: { // Dados extras que podemos usar no futuro
+            veterinario: ag.veterinario.nome,
+            status: ag.status
         },
+        // Adiciona cores para deixar o calendário mais visual
+        color: ag.status === 'confirmada' ? '#28a745' : (ag.status === 'pendente' ? '#ffc107' : '#007bff')
       }));
 
-      res.status(200).json(eventos);
+      // Garante que a resposta seja sempre um array JSON
+      res.status(200).json(eventosFormatados);
+
     } catch (error: any) {
-      res.status(400).json({ message: error.message });
+      console.error("Erro em buscarPorPeriodo:", error); // Log de erro mais específico
+      res.status(500).json({ message: 'Erro interno ao buscar agendamentos.' });
     }
-  }
+  
+}
 }
 
 export default new AgendamentoController();

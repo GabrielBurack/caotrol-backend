@@ -12,6 +12,18 @@ class TutorController {
             res.status(500).json({ message: 'Erro ao criar tutor', error });
         }
     }
+    
+ 
+
+      async findAnimaisDoTutor(req: Request, res: Response) {
+        try {
+            const id_tutor = parseInt(req.params.id);
+            const animais = await tutorService.findAnimaisDoTutor(id_tutor);
+            res.status(200).json(animais);
+        } catch (error: any) {
+            res.status(500).json({ message: error.message });
+        }
+    }
 
     async findAll(req: Request, res: Response){
         try {
