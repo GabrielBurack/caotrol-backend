@@ -23,7 +23,9 @@ class AnimalController {
    */
   async findAll(req: Request, res: Response): Promise<void> {
     try {
-      const animais = await animalService.findAll();
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10; // Padrão de 10 por página
+      const animais = await animalService.findAll(page, limit);
       res.status(200).json(animais);
     } catch (error: any) {
       res.status(500).json({ message: 'Erro ao buscar animais.' });
