@@ -128,7 +128,8 @@ class AgendamentoController {
       const { start, end } = req.query;
 
       if (!start || !end) {
-        return res.status(400).json({ message: 'Os parâmetros "start" e "end" são obrigatórios.' });
+        res.status(400).json({ message: 'Os parâmetros "start" e "end" são obrigatórios.' });
+        return 
       }
 
       const dataInicio = new Date(start as string);

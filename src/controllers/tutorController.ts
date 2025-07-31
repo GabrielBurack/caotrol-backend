@@ -1,21 +1,21 @@
 import { Request, Response } from "express";
 import tutorService from "../services/tutorService";
 
-class TutorController { 
+class TutorController {
 
-    async create(req: Request, res: Response){
+    async create(req: Request, res: Response) {
         try {
             const novoTutor = await tutorService.create(req.body);
             res.status(201).json(novoTutor);
-        
+
         } catch (error) {
             res.status(500).json({ message: 'Erro ao criar tutor', error });
         }
     }
-    
- 
 
-      async findAnimaisDoTutor(req: Request, res: Response) {
+
+
+    async findAnimaisDoTutor(req: Request, res: Response) {
         try {
             const id_tutor = parseInt(req.params.id);
             const animais = await tutorService.findAnimaisDoTutor(id_tutor);
@@ -25,9 +25,14 @@ class TutorController {
         }
     }
 
-    async findAll(req: Request, res: Response){
+    async findAll(req: Request, res: Response) {
         try {
-            const tutores = await tutorService.findAll();
+            // Lê 'page' e 'limit' dos query params da URL (ex: /tutores?page=2&limit=10)
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10; // Padrão de 10 por página
+
+            const tutores = await tutorService.findAll(page, limit);
+
             res.status(200).json(tutores);
         } catch (error) {
             res.status(500).json({ message: 'Erro ao buscar tutores', error });
