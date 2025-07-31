@@ -25,15 +25,32 @@ class VeterinarioService {
     return veterinarioRepository.create(data);
   }
 
-  async findAll(): Promise<veterinario[]> {
-    return veterinarioRepository.findAll();
+  async findAll(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+
+    // 2. Busca os dados no repositório
+    const [veterinarios, total] = await Promise.all([
+      veterinarioRepository.findAll(skip, limit),
+      veterinarioRepository.countAll()
+    ]);
+
+    // 3. Lógica para calcular o total de páginas
+    const totalPages = Math.ceil(total / limit);
+    const currentPage = page;
+
+    return {
+      data: veterinarios,
+      total,
+      totalPages,
+      currentPage,
+    };
   }
 
   async findById(id: number): Promise<veterinario | null> {
     return veterinarioRepository.findById(id);
   }
 
-  async update(id: number, data: Partial<veterinario>): Promise<veterinario| null> {
+  async update(id: number, data: Partial<veterinario>): Promise<veterinario | null> {
 
     const veterinarioExiste = await veterinarioRepository.findById(id);
     if (!veterinarioExiste) {
@@ -43,8 +60,8 @@ class VeterinarioService {
     return veterinarioRepository.update(id, data);
   }
 
-  async delete(id: number): Promise<veterinario| null> {
-    
+  async delete(id: number): Promise<veterinario | null> {
+
     const veterinarioExiste = await veterinarioRepository.findById(id);
     if (!veterinarioExiste) {
       throw new Error('Veterinário não encontrado para exclusão.');
