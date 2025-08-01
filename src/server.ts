@@ -13,6 +13,7 @@ import consultaRouter from "./routes/consultaRoutes";
 import anamneseRouter from "./routes/anamneseRoutes";
 import dashboardRouter from "./routes/dashboardRoutes";
 import vacinaRouter from "./routes/vacinaRoutes";
+import relatorioRouter from "./controllers/relatorioRoutes";
 
 const app = express();
 const port = 3000;
@@ -39,6 +40,7 @@ app.use("/api", consultaRouter);
 app.use("/api", anamneseRouter);
 app.use("/api", dashboardRouter);
 app.use("/api", vacinaRouter);
+app.use("/api", relatorioRouter);
 
 tarefasAgendadasService.iniciar();
 
