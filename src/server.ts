@@ -13,7 +13,7 @@ import consultaRouter from "./routes/consultaRoutes";
 import anamneseRouter from "./routes/anamneseRoutes";
 import dashboardRouter from "./routes/dashboardRoutes";
 import vacinaRouter from "./routes/vacinaRoutes";
-import relatorioRouter from "./controllers/relatorioRoutes";
+import relatorioRouter from "./routes/relatorioRoutes";
 
 const app = express();
 const port = 3000;
