@@ -7,14 +7,26 @@ class TutorRepository {
         return prisma.tutor.create({
             data: {
                 ...data,
-                ativo: true 
+                ativo: true
             }
         });
     }
 
     // Retorna todos os tutores ativos
-    async findAll(): Promise<tutor[]> {
+    async findAll(skip: number, take: number): Promise<tutor[]> {
         return prisma.tutor.findMany({
+            where: { ativo: true },
+            skip: skip,
+            take: take,
+            orderBy: {
+                nome: 'asc'
+            }
+        });
+    }
+
+    //contar o total de registros
+    async countAll(): Promise<number> {
+        return prisma.tutor.count({
             where: { ativo: true }
         });
     }

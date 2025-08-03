@@ -15,7 +15,9 @@ class VeterinarioController {
 
   async findAll(req: Request, res: Response) {
     try {
-      const veterinarios = await veterinarioService.findAll();
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10; // Padrão de 10 por página
+      const veterinarios = await veterinarioService.findAll(page, limit);
       res.status(200).json(veterinarios);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
@@ -26,9 +28,10 @@ class VeterinarioController {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
-        return res
+        res
           .status(400)
           .json({ message: "O ID fornecido não é um número válido." });
+        return
       }
 
       const veterinario = await veterinarioService.findById(id);
@@ -46,9 +49,10 @@ class VeterinarioController {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
-        return res
+        res
           .status(400)
           .json({ message: "O ID fornecido não é um número válido." });
+        return
       }
 
       const veterinario = await veterinarioService.update(id, req.body);
@@ -62,9 +66,10 @@ class VeterinarioController {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
-        return res
+        res
           .status(400)
           .json({ message: "O ID fornecido não é um número válido." });
+        return
       }
 
       await veterinarioService.delete(id);
@@ -74,10 +79,11 @@ class VeterinarioController {
         error instanceof PrismaClientKnownRequestError &&
         error.code === "P2003"
       ) {
-        return res.status(409).json({
+        res.status(409).json({
           message:
             "Erro: Este veterinário não pode ser deletado pois está associado a agendamentos ou consultas.",
         });
+        return
       }
       res.status(400).json({ message: error.message });
     }

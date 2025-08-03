@@ -5,29 +5,43 @@ import animalService from '../services/animalService';
 import { Prisma } from '@prisma/client';
 
 class AnimalController {
-  async create(req: Request, res: Response) {
+  /**
+   * Cria um novo animal.
+   */
+  async create(req: Request, res: Response): Promise<void> {
     try {
       const animal = await animalService.create(req.body);
       res.status(201).json(animal);
     } catch (error: any) {
+      // Trata erros de validação do serviço (ex: campo faltando)
       res.status(400).json({ message: error.message });
     }
   }
 
-  async findAll(req: Request, res: Response) {
+  /**
+   * Busca todos os animais.
+   */
+  async findAll(req: Request, res: Response): Promise<void> {
     try {
-      const animais = await animalService.findAll();
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10; // Padrão de 10 por página
+      const animais = await animalService.findAll(page, limit);
       res.status(200).json(animais);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: 'Erro ao buscar animais.' });
     }
   }
 
-  async findById(req: Request, res: Response) {
+  /**
+   * Busca um animal pelo seu ID.
+   */
+  async findById(req: Request, res: Response): Promise<void> {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
-        return res.status(400).json({ message: 'O ID fornecido não é um número válido.' });
+        // Correção: remove 'return' e adiciona 'return;' na linha seguinte
+        res.status(400).json({ message: 'O ID fornecido não é um número válido.' });
+        return;
       }
 
       const animal = await animalService.findById(id);
@@ -37,35 +51,54 @@ class AnimalController {
         res.status(404).json({ message: 'Animal não encontrado.' });
       }
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: 'Erro ao buscar o animal.' });
     }
   }
 
-  async update(req: Request, res: Response) {
+  /**
+   * Atualiza os dados de um animal.
+   */
+  async update(req: Request, res: Response): Promise<void> {
     try {
       const id = parseInt(req.params.id);
-       if (isNaN(id)) {
-        return res.status(400).json({ message: 'O ID fornecido não é um número válido.' });
+      if (isNaN(id)) {
+        // Correção: remove 'return' e adiciona 'return;' na linha seguinte
+        res.status(400).json({ message: 'O ID fornecido não é um número válido.' });
+        return;
       }
 
       const animal = await animalService.update(id, req.body);
       res.status(200).json(animal);
     } catch (error: any) {
-      res.status(400).json({ message: error.message });
+      // Melhoria: Tratar erro de "não encontrado" especificamente
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+        res.status(404).json({ message: 'Animal não encontrado para atualização.' });
+      } else {
+        res.status(400).json({ message: error.message });
+      }
     }
   }
 
-  async deactivate(req: Request, res: Response) {
+  /**
+   * Desativa um animal (soft delete).
+   */
+  async deactivate(req: Request, res: Response): Promise<void> {
     try {
       const id = parseInt(req.params.id);
-       if (isNaN(id)) {
-        return res.status(400).json({ message: 'O ID fornecido não é um número válido.' });
+      if (isNaN(id)) {
+        // Correção: remove 'return' e adiciona 'return;' na linha seguinte
+        res.status(400).json({ message: 'O ID fornecido não é um número válido.' });
+        return;
       }
 
       await animalService.deactivate(id);
-      res.status(204).send();
+      res.status(204).send(); // 204 No Content é perfeito para esta ação
     } catch (error: any) {
-      res.status(400).json({ message: error.message });
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+        res.status(404).json({ message: 'Animal não encontrado para desativar.' });
+      } else {
+        res.status(400).json({ message: error.message });
+      }
     }
   }
 }

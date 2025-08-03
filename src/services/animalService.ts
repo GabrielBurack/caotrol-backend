@@ -18,8 +18,26 @@ class AnimalService {
     return animalRepository.create(data);
   }
 
-  async findAll(): Promise<animal[]> {
-    return animalRepository.findAll();
+  async findAll(page: number, limit: number){
+
+    const skip = (page - 1) * limit;
+
+    // 2. Busca os dados no repositório
+    const [animais, total] = await Promise.all([
+      animalRepository.findAll(skip, limit),
+      animalRepository.countAll()
+    ]);
+
+    // 3. Lógica para calcular o total de páginas
+    const totalPages = Math.ceil(total / limit);
+    const currentPage = page;
+
+    return {
+      data: animais,
+      total,
+      totalPages,
+      currentPage,
+    };
   }
 
   async findById(id: number): Promise<animal | null> {

@@ -5,9 +5,13 @@ import authMiddleware from "../middlewares/authMiddleware";
 const tutorRouter = Router();
 
 tutorRouter.get('/tutores', authMiddleware, tutorController.findAll);
-tutorRouter.post('/tutores', tutorController.create);
-tutorRouter.get('/tutores/:id', tutorController.findById);
-tutorRouter.put('/tutores/:id', tutorController.update);
-tutorRouter.delete('/tutores/:id', tutorController.deactivate);
+tutorRouter.post('/tutores', authMiddleware, tutorController.create);
+tutorRouter.get('/tutores/:id', authMiddleware, tutorController.findById);
+tutorRouter.put('/tutores/:id', authMiddleware, tutorController.update);
+tutorRouter.delete('/tutores/:id', authMiddleware, tutorController.deactivate);
+tutorRouter.get('/tutores/:id/animais', authMiddleware, tutorController.findAnimaisDoTutor);
+tutorRouter.get('/tutores/:id/animais', authMiddleware, tutorController.findAnimaisDoTutor);
+
+
 
 export default tutorRouter;

@@ -1,5 +1,7 @@
 import tutorRepository from "../repositories/tutorRepository";
 import { tutor } from "@prisma/client";
+import animalRepository from "../repositories/animalRepository";
+
 
 class TutorService {
 
@@ -8,11 +10,39 @@ class TutorService {
         return tutorRepository.create(data);
     }
 
-    async findAll(): Promise<tutor[]> {
-        return tutorRepository.findAll();
+    async findAll(page: number, limit: number) {
+        // 1. Lógica para calcular quais registros buscar
+        const skip = (page - 1) * limit;
+
+        // 2. Busca os dados no repositório
+        const [tutores, total] = await Promise.all([
+            tutorRepository.findAll(skip, limit),
+            tutorRepository.countAll()
+        ]);
+
+        // 3. Lógica para calcular o total de páginas
+        const totalPages = Math.ceil(total / limit);
+        const currentPage = page;
+        
+        return {
+            data: tutores,    
+            total,
+            totalPages,
+            currentPage,
+        };
     }
 
-    async findById(id: number): Promise<tutor | null>{
+    async findAnimaisDoTutor(id_tutor: number) {
+        // Validação: verifica se o tutor existe antes de buscar os animais
+        const tutorExiste = await tutorRepository.findById(id_tutor);
+        if (!tutorExiste) {
+            throw new Error("Tutor não encontrado.");
+        }
+
+        // Chama o repositório de ANIMAIS para buscar os animais daquele tutor
+        return animalRepository.findAllByTutorId(id_tutor);
+    }
+    async findById(id: number): Promise<tutor | null> {
         return tutorRepository.findById(id);
     }
 
