@@ -32,6 +32,7 @@
     "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
     "node-cron": "^4.2.0",
-    "pg": "^8.16.2"
+    "pg": "^8.16.2",
+    "swagger-ui-express": "^5.0.1"
   }
 }

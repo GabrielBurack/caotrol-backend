@@ -7,6 +7,7 @@ interface DecodedToken {
   id: number;
   tipo: string;
 }
+
 declare global {
   namespace Express {
     export interface Request {
