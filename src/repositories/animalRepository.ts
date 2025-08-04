@@ -46,12 +46,12 @@ class AnimalRepository {
     });
   }
 
-
+// No futuro, considerar paginação
   async findAllByTutorId(id_tutor: number): Promise<animal[]> {
     return prisma.animal.findMany({
       where: {
-        id_tutor: id_tutor, // O filtro para buscar apenas animais deste tutor
-        ativo: true        // Garante que só traga animais ativos
+        id_tutor: id_tutor, 
+        ativo: true 
       }
     });
   }

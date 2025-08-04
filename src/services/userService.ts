@@ -21,6 +21,31 @@ class UserService {
         const { senha, ...userWithoutPassword } = createdUser;
         return userWithoutPassword;
     }
+
+    async findAll(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+
+    const [usuarios, total] = await Promise.all([
+      userRepository.findAll(skip, limit),
+      userRepository.countAll()
+    ]);
+
+    // Mapeia os resultados para remover a senha de cada usuário
+    const usuariosSemSenha = usuarios.map(usuario => {
+      const { senha, ...user } = usuario;
+      return user;
+    });
+
+    const totalPages = Math.ceil(total / limit);
+    const currentPage = page;
+
+    return {
+      data: usuariosSemSenha, // Retorna a lista sem as senhas
+      total,
+      totalPages,
+      currentPage,
+    };
+  }
 }
 
 export default new UserService();
