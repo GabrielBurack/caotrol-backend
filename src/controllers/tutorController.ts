@@ -30,8 +30,9 @@ class TutorController {
             // Lê 'page' e 'limit' dos query params da URL (ex: /tutores?page=2&limit=10)
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10; // Padrão de 10 por página
+            const busca = req.query.busca as string | undefined;
 
-            const tutores = await tutorService.findAll(page, limit);
+            const tutores = await tutorService.findAll(page, limit, busca);
 
             res.status(200).json(tutores);
         } catch (error) {

@@ -10,14 +10,14 @@ class TutorService {
         return tutorRepository.create(data);
     }
 
-    async findAll(page: number, limit: number) {
+    async findAll(page: number, limit: number, busca?: string) {
         // 1. Lógica para calcular quais registros buscar
         const skip = (page - 1) * limit;
 
         // 2. Busca os dados no repositório
         const [tutores, total] = await Promise.all([
-            tutorRepository.findAll(skip, limit),
-            tutorRepository.countAll()
+            tutorRepository.findAll(skip, limit, busca),
+            tutorRepository.countAll(busca)
         ]);
 
         // 3. Lógica para calcular o total de páginas
