@@ -18,9 +18,10 @@ class TutorRepository {
       ativo: true,
     };
 
+    // Lógica de busca dentro da própria função
     if (busca) {
       where.OR = [
-        { nome: { contains: busca, mode: "insensitive" } },
+        { nome: { contains: busca, mode: 'insensitive' } },
         { cpf: { contains: busca } },
       ];
     }
@@ -30,20 +31,49 @@ class TutorRepository {
       skip: skip,
       take: take,
       orderBy: {
-        nome: "asc",
+        nome: 'asc',
       },
     });
   }
 
-  //contar o total de registros
+  /**
+   * Busca tutores por nome ou CPF para componentes de autocomplete.
+   * Retorna uma lista limitada e com dados simplificados.
+   * @param termo - O termo de busca.
+   * @param limite - O número máximo de resultados a retornar.
+   */
+  async searchByNameOrCpf(
+    termo: string,
+    limite = 10
+  ): Promise<{ id_tutor: number; nome: string; cpf: string }[]> {
+    return prisma.tutor.findMany({
+      where: {
+        ativo: true,
+        // Lógica de busca diretamente na query
+        OR: [
+          { nome: { contains: termo, mode: 'insensitive' } },
+          { cpf: { contains: termo } }
+        ]
+      },
+      take: limite,
+      select: {
+        id_tutor: true,
+        nome: true,
+        cpf: true
+      }
+    });
+  }
+
+  // Contar o total de registros
   async countAll(busca?: string): Promise<number> {
     const where: Prisma.tutorWhereInput = {
       ativo: true,
     };
 
+    // Lógica de busca duplicada aqui para a contagem
     if (busca) {
       where.OR = [
-        { nome: { contains: busca, mode: "insensitive" } },
+        { nome: { contains: busca, mode: 'insensitive' } },
         { cpf: { contains: busca } },
       ];
     }

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import tutorService from "../services/tutorService";
 
 class TutorController {
@@ -54,6 +54,21 @@ class TutorController {
             res.status(500).json({ message: 'Erro ao buscar tutor', error });
         }
     }
+
+    async search(req: Request, res: Response, next: NextFunction) {
+    try {
+      const termo = req.query.termo as string | undefined;
+
+      if (!termo) {
+        return res.status(200).json([]); 
+      }
+      
+      const resultados = await tutorService.search(termo);
+      res.status(200).json(resultados);
+    } catch (error) {
+      next(error);
+    }
+  }
 
     async update(req: Request, res: Response) {
         try {
