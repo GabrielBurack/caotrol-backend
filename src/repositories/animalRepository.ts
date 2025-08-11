@@ -68,13 +68,28 @@ class AnimalRepository {
     });
   }
 
-  async findAllByTutorId(id_tutor: number): Promise<animal[]> {
-    return prisma.animal.findMany({
-      where: {
-        id_tutor: id_tutor, 
-        ativo: true 
+  async findAllByTutorId(id_tutor: number) {
+  return prisma.animal.findMany({
+    where: {
+      id_tutor: id_tutor,
+      ativo: true
+    },
+    select: {
+      id_animal: true,
+      nome: true,
+      raca: {
+        select: {
+          nome: true,
+          especie: {
+            select: {
+              nome: true
+            }
+          }
+        }
       }
-    });
+    }
+  });
+
   }
   async findById(id: number): Promise<animal | null> {
     return prisma.animal.findUnique({

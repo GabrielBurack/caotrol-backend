@@ -46,6 +46,14 @@ class AnimalService {
     return animal;
   }
 
+  async findAllByTutor(id_tutor: number) {
+    const tutorExiste = await tutorRepository.findById(id_tutor);
+    if (!tutorExiste) {
+      throw new NotFoundError("Tutor não encontrado.");
+    }
+    return animalRepository.findAllByTutorId(id_tutor);
+  }
+
   async update(id: number, data: Partial<animal>): Promise<animal> {
     await this.findById(id);
     return animalRepository.update(id, data);

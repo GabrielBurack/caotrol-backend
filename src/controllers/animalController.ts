@@ -22,6 +22,12 @@ class AnimalController {
     res.status(200).json(animal);
   });
 
+  findAllByTutor = asyncHandler(async (req: Request, res: Response) => {
+    const id_tutor = parseInt(req.params.id_tutor);
+    const animais = await animalService.findAllByTutor(id_tutor);
+    res.status(200).json(animais);
+  });
+
   update = asyncHandler(async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const animal = await animalService.update(id, req.body);
