@@ -20,7 +20,18 @@ class AnimalRepository {
     });
   }
 
-  async findAll(skip: number, take: number): Promise<animal[]> {
+  async findAll(skip: number, take: number, busca?: string): Promise<animal[]> {
+    const where: Prisma.animalWhereInput = {
+      ativo: true,
+    };
+
+    if (busca) {
+      where.nome = {
+        contains: busca,
+        mode: 'insensitive',
+      };
+    }
+    
     return prisma.animal.findMany({
       where: { ativo: true },
       skip: skip,
@@ -40,13 +51,23 @@ class AnimalRepository {
   }
 
   //contar o total de registros
-  async countAll(): Promise<number> {
+ async countAll(busca?: string): Promise<number> {
+    const where: Prisma.animalWhereInput = {
+      ativo: true,
+    };
+
+    if (busca) {
+      where.nome = {
+        contains: busca,
+        mode: 'insensitive',
+      };
+    }
+
     return prisma.animal.count({
-      where: { ativo: true }
+      where: where,
     });
   }
 
-// No futuro, considerar paginação
   async findAllByTutorId(id_tutor: number): Promise<animal[]> {
     return prisma.animal.findMany({
       where: {

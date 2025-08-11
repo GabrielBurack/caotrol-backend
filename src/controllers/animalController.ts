@@ -11,8 +11,8 @@ class AnimalController {
   findAll = asyncHandler(async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
-    // Adicionaremos o filtro de busca aqui quando implementarmos
-    const animais = await animalService.findAll(page, limit);
+    const busca = req.query.busca as string | undefined;
+    const animais = await animalService.findAll(page, limit, busca);
     res.status(200).json(animais);
   });
 
