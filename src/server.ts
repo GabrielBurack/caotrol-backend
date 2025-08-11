@@ -14,6 +14,7 @@ import anamneseRouter from "./routes/anamneseRoutes";
 import dashboardRouter from "./routes/dashboardRoutes";
 import vacinaRouter from "./routes/vacinaRoutes";
 import relatorioRouter from "./routes/relatorioRoutes";
+import { errorMiddleware } from "./middlewares/errorMiddleware";
 
 const app = express();
 const port = 3000;
@@ -43,6 +44,7 @@ app.use("/api", vacinaRouter);
 app.use("/api", relatorioRouter);
 
 tarefasAgendadasService.iniciar();
+app.use(errorMiddleware);
 
 app.listen(port, () => {
   console.log(`Servidor backend rodando em http://localhost:${port}`);

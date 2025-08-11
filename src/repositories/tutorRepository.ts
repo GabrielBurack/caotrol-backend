@@ -90,6 +90,16 @@ class TutorRepository {
     });
   }
 
+  // Busca por CPF (apenas tutores ativos)
+  async findByCpf(cpf: string): Promise<tutor | null> {
+    return prisma.tutor.findFirst({
+      where: {
+        cpf,
+        ativo: true,
+      },
+    });
+  }
+
   // Atualização de dados
   async update(id: number, data: Partial<tutor>): Promise<tutor> {
     return prisma.tutor.update({
