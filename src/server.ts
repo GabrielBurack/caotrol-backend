@@ -15,6 +15,7 @@ import dashboardRouter from "./routes/dashboardRoutes";
 import vacinaRouter from "./routes/vacinaRoutes";
 import relatorioRouter from "./routes/relatorioRoutes";
 import { errorMiddleware } from "./middlewares/errorMiddleware";
+import exameRouter from "./routes/exameRoutes";
 
 const app = express();
 const port = 3000;
@@ -42,6 +43,7 @@ app.use("/api", anamneseRouter);
 app.use("/api", dashboardRouter);
 app.use("/api", vacinaRouter);
 app.use("/api", relatorioRouter);
+app.use("/api", exameRouter);
 
 tarefasAgendadasService.iniciar();
 app.use(errorMiddleware);
