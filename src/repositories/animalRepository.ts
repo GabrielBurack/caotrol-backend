@@ -1,5 +1,3 @@
-// src/repositories/animalRepository.ts
-
 import prisma from "../prisma";
 import { animal, Prisma } from '@prisma/client';
 
@@ -11,28 +9,99 @@ class AnimalRepository {
         ...data,
         ativo: true,
       },
-      include: { /* ... */ }
+      include: {
+        tutor: true,
+        raca: {
+          include: {
+            especie: true
+          }
+        }
+      }
     });
   }
 
-  async findAll(): Promise<animal[]> {
+  async findAll(skip: number, take: number, busca?: string): Promise<animal[]> {
+    const where: Prisma.animalWhereInput = {
+      ativo: true,
+    };
+
+    if (busca) {
+      where.nome = {
+        contains: busca,
+        mode: 'insensitive',
+      };
+    }
+    
     return prisma.animal.findMany({
       where: { ativo: true },
-      include: { /* ... */ }
+      skip: skip,
+      take: take,
+      orderBy: {
+        nome: 'asc'
+      },
+      include: {
+        tutor: true,
+        raca: {
+          include: {
+            especie: true
+          }
+        }
+      }
     });
   }
-  async findAllByTutorId(id_tutor: number): Promise<animal[]> {
-    return prisma.animal.findMany({
-        where: {
-            id_tutor: id_tutor, // O filtro para buscar apenas animais deste tutor
-            ativo: true        // Garante que só traga animais ativos
-        }
+
+  //contar o total de registros
+ async countAll(busca?: string): Promise<number> {
+    const where: Prisma.animalWhereInput = {
+      ativo: true,
+    };
+
+    if (busca) {
+      where.nome = {
+        contains: busca,
+        mode: 'insensitive',
+      };
+    }
+
+    return prisma.animal.count({
+      where: where,
     });
-}
+  }
+
+  async findAllByTutorId(id_tutor: number) {
+  return prisma.animal.findMany({
+    where: {
+      id_tutor: id_tutor,
+      ativo: true
+    },
+    select: {
+      id_animal: true,
+      nome: true,
+      raca: {
+        select: {
+          nome: true,
+          especie: {
+            select: {
+              nome: true
+            }
+          }
+        }
+      }
+    }
+  });
+
+  }
   async findById(id: number): Promise<animal | null> {
     return prisma.animal.findUnique({
       where: { id_animal: id },
-      include: { /* ... */ }
+      include: {
+        tutor: true,
+        raca: {
+          include: {
+            especie: true
+          }
+        }
+      }
     });
   }
 
@@ -40,7 +109,14 @@ class AnimalRepository {
     return prisma.animal.update({
       where: { id_animal: id },
       data,
-      include: { /* ... */ }
+      include: {
+        tutor: true,
+        raca: {
+          include: {
+            especie: true
+          }
+        }
+      }
     });
   }
 

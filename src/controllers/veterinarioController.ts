@@ -15,7 +15,9 @@ class VeterinarioController {
 
   async findAll(req: Request, res: Response) {
     try {
-      const veterinarios = await veterinarioService.findAll();
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10; // Padrão de 10 por página
+      const veterinarios = await veterinarioService.findAll(page, limit);
       res.status(200).json(veterinarios);
     } catch (error: any) {
       res.status(500).json({ message: error.message });

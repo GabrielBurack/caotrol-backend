@@ -6,9 +6,6 @@ interface DecodedToken {
   id: number;
   tipo: string;
 }
-
-// Estendendo a interface Request global do Express para adicionar a propriedade 'usuario'.
-// Isso garante que o TypeScript reconheça `req.usuario` nos seus controladores.
 declare global {
   namespace Express {
     export interface Request {

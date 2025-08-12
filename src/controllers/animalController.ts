@@ -1,104 +1,44 @@
-// src/controllers/animalController.ts
-
 import { Request, Response } from 'express';
 import animalService from '../services/animalService';
-import { Prisma } from '@prisma/client';
+import asyncHandler from 'express-async-handler';
 
 class AnimalController {
-  /**
-   * Cria um novo animal.
-   */
-  async create(req: Request, res: Response): Promise<void> {
-    try {
-      const animal = await animalService.create(req.body);
-      res.status(201).json(animal);
-    } catch (error: any) {
-      // Trata erros de validação do serviço (ex: campo faltando)
-      res.status(400).json({ message: error.message });
-    }
-  }
+  create = asyncHandler(async (req: Request, res: Response) => {
+    const animal = await animalService.create(req.body);
+    res.status(201).json(animal);
+  });
 
-  /**
-   * Busca todos os animais.
-   */
-  async findAll(req: Request, res: Response): Promise<void> {
-    try {
-      const animais = await animalService.findAll();
-      res.status(200).json(animais);
-    } catch (error: any) {
-      res.status(500).json({ message: 'Erro ao buscar animais.' });
-    }
-  }
+  findAll = asyncHandler(async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const busca = req.query.busca as string | undefined;
+    const animais = await animalService.findAll(page, limit, busca);
+    res.status(200).json(animais);
+  });
 
-  /**
-   * Busca um animal pelo seu ID.
-   */
-  async findById(req: Request, res: Response): Promise<void> {
-    try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        // Correção: remove 'return' e adiciona 'return;' na linha seguinte
-        res.status(400).json({ message: 'O ID fornecido não é um número válido.' });
-        return;
-      }
+  findById = asyncHandler(async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    const animal = await animalService.findById(id);
+    res.status(200).json(animal);
+  });
 
-      const animal = await animalService.findById(id);
-      if (animal) {
-        res.status(200).json(animal);
-      } else {
-        res.status(404).json({ message: 'Animal não encontrado.' });
-      }
-    } catch (error: any) {
-      res.status(500).json({ message: 'Erro ao buscar o animal.' });
-    }
-  }
+  findAllByTutor = asyncHandler(async (req: Request, res: Response) => {
+    const id_tutor = parseInt(req.params.id_tutor);
+    const animais = await animalService.findAllByTutor(id_tutor);
+    res.status(200).json(animais);
+  });
 
-  /**
-   * Atualiza os dados de um animal.
-   */
-  async update(req: Request, res: Response): Promise<void> {
-    try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        // Correção: remove 'return' e adiciona 'return;' na linha seguinte
-        res.status(400).json({ message: 'O ID fornecido não é um número válido.' });
-        return;
-      }
+  update = asyncHandler(async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    const animal = await animalService.update(id, req.body);
+    res.status(200).json(animal);
+  });
 
-      const animal = await animalService.update(id, req.body);
-      res.status(200).json(animal);
-    } catch (error: any) {
-      // Melhoria: Tratar erro de "não encontrado" especificamente
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
-        res.status(404).json({ message: 'Animal não encontrado para atualização.' });
-      } else {
-        res.status(400).json({ message: error.message });
-      }
-    }
-  }
-
-  /**
-   * Desativa um animal (soft delete).
-   */
-  async deactivate(req: Request, res: Response): Promise<void> {
-    try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        // Correção: remove 'return' e adiciona 'return;' na linha seguinte
-        res.status(400).json({ message: 'O ID fornecido não é um número válido.' });
-        return;
-      }
-
-      await animalService.deactivate(id);
-      res.status(204).send(); // 204 No Content é perfeito para esta ação
-    } catch (error: any) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
-        res.status(404).json({ message: 'Animal não encontrado para desativar.' });
-      } else {
-        res.status(400).json({ message: error.message });
-      }
-    }
-  }
+  deactivate = asyncHandler(async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    await animalService.deactivate(id);
+    res.status(204).send();
+  });
 }
 
 export default new AnimalController();

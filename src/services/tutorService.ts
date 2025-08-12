@@ -1,42 +1,62 @@
-import tutorRepository from "../repositories/tutorRepository";
 import { tutor } from "@prisma/client";
-import animalRepository from "../repositories/animalRepository"; 
-
+import tutorRepository from "../repositories/tutorRepository";
+import animalRepository from "../repositories/animalRepository";
+import { NotFoundError, BadRequestError } from "../helpers/ApiError";
 
 class TutorService {
+  async create(data: Omit<tutor, "id_tutor" | "ativo">): Promise<tutor> {
+    const tutorExistente = await tutorRepository.findByCpf(data.cpf);
+    if (tutorExistente) {
+      throw new BadRequestError("Um tutor com este CPF já está cadastrado.");
+    }
+    return tutorRepository.create(data);
+  }
 
-    async create(data: Omit<tutor, 'id_tutor' | 'ativo'>): Promise<tutor> {
-        // Exemplo de regra de negócio: Poderíamos verificar duplicidade de CPF aqui
-        return tutorRepository.create(data);
-    }
+  async findAll(page: number, limit: number, busca?: string) {
+    const skip = (page - 1) * limit;
+    const [tutores, total] = await Promise.all([
+      tutorRepository.findAll(skip, limit, busca),
+      tutorRepository.countAll(busca),
+    ]);
+    const totalPages = Math.ceil(total / limit);
+    return {
+      data: tutores,
+      total,
+      totalPages,
+      currentPage: page,
+    };
+  }
 
-    async findAll(): Promise<tutor[]> {
-        return tutorRepository.findAll();
+  async search(termo: string) {
+    if (!termo || termo.trim().length < 2) {
+      return [];
     }
-   
-    async findAnimaisDoTutor(id_tutor: number) {
-        // Validação: verifica se o tutor existe antes de buscar os animais
-        const tutorExiste = await tutorRepository.findById(id_tutor);
-        if (!tutorExiste) {
-            throw new Error("Tutor não encontrado.");
-        }
-        
-        // Chama o repositório de ANIMAIS para buscar os animais daquele tutor
-        return animalRepository.findAllByTutorId(id_tutor);
-    }
-    async findById(id: number): Promise<tutor | null>{
-        return tutorRepository.findById(id);
-    }
+    return tutorRepository.searchByNameOrCpf(termo);
+  }
 
-    async update(id: number, data: Partial<tutor>): Promise<tutor> {
-        // Regra de negócio: Poderíamos verificar se o tutor existe antes de tentar atualizar
-        return tutorRepository.update(id, data);
+  async findById(id: number): Promise<tutor> {
+    const tutor = await tutorRepository.findById(id);
+    if (!tutor) {
+      throw new NotFoundError("Tutor não encontrado.");
     }
+    return tutor;
+  }
 
-    async deactivate(id: number): Promise<tutor> {
-        // Regra de negócio: Poderíamos verificar se o tutor a ser deletado não tem animais associados
-        return tutorRepository.deactivate(id);
-    }
+  async findAnimaisDoTutor(id_tutor: number) {
+    await this.findById(id_tutor);
+    return animalRepository.findAllByTutorId(id_tutor);
+  }
+
+  async update(id: number, data: Partial<tutor>): Promise<tutor> {
+    //Garante que o tutor existe antes de tentar atualizar
+    await this.findById(id); 
+    return tutorRepository.update(id, data);
+  }
+
+  async deactivate(id: number): Promise<tutor> {
+    await this.findById(id);
+    return tutorRepository.deactivate(id);
+  }
 }
 
 export default new TutorService();

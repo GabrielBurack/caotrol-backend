@@ -1,4 +1,5 @@
 import anamneseRepository from "../repositories/anamneseRepository";
+import animalRepository from "../repositories/animalRepository";
 import consultaRepository from "../repositories/consultaRepository";
 
 interface DadosAnamnese {
@@ -22,6 +23,16 @@ class AnamneseService {
     };
 
     return anamneseRepository.create(dadosParaCriar);
+  }
+
+  async buscarHistoricoPorAnimal(id_animal: number){
+    const animal = animalRepository.findById(id_animal);
+
+    if(!animal){
+      throw new Error('Animal não encontrado.');
+    }
+
+    return anamneseRepository.findAllByAnimalId(id_animal);
   }
 }
 

@@ -13,6 +13,17 @@ class AnamneseController {
       res.status(400).json({ message: error.message });
     }
   }
+
+  async findAllByAnimalId(req: Request, res: Response){
+    try {
+      const id_animal = +req.params.id_animal;
+      const historico = await anamneseService.buscarHistoricoPorAnimal(id_animal);
+      res.status(200).json(historico);
+
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  }
 }
 
 export default new AnamneseController();

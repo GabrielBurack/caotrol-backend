@@ -8,8 +8,19 @@ class VeterinarioRepository {
     return prisma.veterinario.create({ data });
   }
 
-  async findAll(): Promise<veterinario[]> {
-    return prisma.veterinario.findMany();
+  async findAll(skip: number, take: number): Promise<veterinario[]> {
+    return prisma.veterinario.findMany({
+      skip: skip,
+      take: take,
+      orderBy: {
+        nome: 'asc'
+      },
+    });
+  }
+
+  //contar o total de registros
+  async countAll(): Promise<number> {
+    return prisma.veterinario.count();
   }
 
   async findById(id: number): Promise<veterinario | null> {
@@ -36,12 +47,12 @@ class VeterinarioRepository {
 
   async findByCpfOrCrmv(cpf: string, crmv: string): Promise<veterinario | null> {
     return prisma.veterinario.findFirst({
-        where: {
-            OR: [
-                { cpf: cpf },
-                { crmv: crmv }
-            ]
-        }
+      where: {
+        OR: [
+          { cpf: cpf },
+          { crmv: crmv }
+        ]
+      }
     });
   }
 }

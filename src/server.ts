@@ -12,6 +12,11 @@ import agendamentoRouter from "./routes/agendamentoRoutes";
 import consultaRouter from "./routes/consultaRoutes";
 import anamneseRouter from "./routes/anamneseRoutes";
 import dashboardRouter from "./routes/dashboardRoutes";
+import vacinaRouter from "./routes/vacinaRoutes";
+import relatorioRouter from "./routes/relatorioRoutes";
+import { errorMiddleware } from "./middlewares/errorMiddleware";
+import exameRouter from "./routes/exameRoutes";
+import prescricaoRouter from "./routes/prescricaoRoutes";
 
 const app = express();
 const port = 3000;
@@ -37,8 +42,13 @@ app.use("/api", agendamentoRouter);
 app.use("/api", consultaRouter);
 app.use("/api", anamneseRouter);
 app.use("/api", dashboardRouter);
+app.use("/api", vacinaRouter);
+app.use("/api", relatorioRouter);
+app.use("/api", exameRouter);
+app.use("/api", prescricaoRouter);
 
 tarefasAgendadasService.iniciar();
+app.use(errorMiddleware);
 
 app.listen(port, () => {
   console.log(`Servidor backend rodando em http://localhost:${port}`);
