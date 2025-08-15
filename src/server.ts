@@ -19,6 +19,7 @@ import exameRouter from "./routes/exameRoutes";
 import prescricaoRouter from "./routes/prescricaoRoutes";
 import cidadeRouter from "./routes/cidadeRoutes";
 import estadoRouter from "./routes/estadoRoutes";
+import enderecoRouter from "./routes/enderecoRoutes";
 
 const app = express();
 const port = 3000;
@@ -50,6 +51,7 @@ app.use("/api", exameRouter);
 app.use("/api", prescricaoRouter);
 app.use("/api", cidadeRouter);
 app.use("/api", estadoRouter);
+app.use("/api", enderecoRouter);
 
 
 
