@@ -150,7 +150,7 @@ class AgendamentoController {
             realizada: ag.id_consulta !== null 
         },
         // Adiciona cores para deixar o calendário mais visual
-        color: ag.status === 'confirmada' ? '#28a745' : (ag.status === 'pendente' ? '#ffc107' : '#007bff')
+        color: ag.status === 'confirmada' ? '#28a745' : (ag.status === 'pendente' ? '#ffc107' : ag.status === 'nao_compareceu' ? '#dc3545' : '#007bff')
       }));
 
       // Garante que a resposta seja sempre um array JSON
