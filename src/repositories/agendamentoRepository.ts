@@ -52,27 +52,39 @@ class AgendamentoRepository {
    * @param dataFim - Data de fim do intervalo.
    * @param id_veterinario - (Opcional) ID do veterinário para filtrar.
    */
-  async findByDateRange(dataInicio: Date, dataFim: Date, id_veterinario?: number): Promise<agendamento[]> {
+  async findByDateRange(
+    dataInicio: Date,
+    dataFim: Date,
+    id_veterinario?: number
+  ): Promise<any[]> {
+    // O tipo de retorno agora é mais complexo
     return prisma.agendamento.findMany({
       where: {
-        // ✅ CORREÇÃO APLICADA AQUI 👇
         data_exec: {
-          gte: dataInicio, // gte: Maior ou igual a data de início
-          lt: dataFim,     // lt: Menor que a data de fim
+          gte: dataInicio,
+          lte: dataFim, // Usar 'lte' (menor ou igual) é mais seguro para pegar o dia inteiro
         },
         id_veterinario: id_veterinario,
         status: {
-          not: 'cancelada'
-        }
+          not: "cancelada",
+        },
       },
-      include: {
-        tutor: { select: { nome: true } },
+      // A MUDANÇA PRINCIPAL É TROCAR 'INCLUDE' POR 'SELECT'
+      select: {
+        // 1. Selecione os campos que você precisa da tabela 'agendamento'
+        id_agenda: true,
+        data_exec: true,
+        status: true,
+        id_consulta: true, // <-- CAMPO ADICIONADO AQUI
+
+        // 2. Inclua os dados das relações que você precisa
         animal: { select: { nome: true } },
-        veterinario: { select: { nome: true } }
+        tutor: { select: { nome: true } },
+        veterinario: { select: { nome: true } },
       },
       orderBy: {
-        data_exec: 'asc'
-      }
+        data_exec: "asc",
+      },
     });
   }
   /**

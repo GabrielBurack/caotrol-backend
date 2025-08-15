@@ -4,6 +4,7 @@ import tutorRepository from "../repositories/tutorRepository";
 import animalRepository from "../repositories/animalRepository";
 import veterinarioRepository from "../repositories/veterinarioRepository";
 import { calcularHorariosDisponiveis, HORARIOS_FIXOS } from "../helpers/agendaHelper";
+import { BadRequestError, NotFoundError } from "../helpers/ApiError";
 
 
 
@@ -163,6 +164,28 @@ class AgendamentoService {
       dataFim
     ) as unknown as AgendamentoComRelacoes[];
   }
+
+  async marcarNaoComparecimento(id: number): Promise<agendamento> {
+    const agendamento = await agendamentoRepository.findById(id);
+    if (!agendamento) {
+      throw new NotFoundError("Agendamento não encontrado.");
+    }
+
+    // Regra de negócio: só pode marcar falta se o horário já passou
+    if (new Date(agendamento.data_exec) > new Date()) {
+        throw new BadRequestError("Não é possível marcar falta para um agendamento futuro.");
+    }
+
+    // Regra de negócio: não pode marcar falta em algo já cancelado ou realizado
+    if (agendamento.status === 'cancelada' || agendamento.id_consulta !== null) {
+        throw new BadRequestError("Não é possível marcar falta para um agendamento que já foi cancelado ou realizado.");
+    }
+
+    return agendamentoRepository.update(id, {
+      status: 'nao_compareceu'
+    });
+  }
+
 }
 
 export default new AgendamentoService();

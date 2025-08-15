@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import agendamentoService from "../services/agendamentoService";
 import { Prisma } from "@prisma/client";
+import asyncHandler from 'express-async-handler';
+
 
 // 2. Crie um tipo mais específico para o agendamento com os dados incluídos
 type AgendamentoComRelacoes = Prisma.agendamentoGetPayload<{
@@ -144,7 +146,8 @@ class AgendamentoController {
         start: ag.data_exec, // O FullCalendar vai lidar com o fuso horário
         extendedProps: { // Dados extras que podemos usar no futuro
             veterinario: ag.veterinario.nome,
-            status: ag.status
+            status: ag.status,
+            realizada: ag.id_consulta !== null 
         },
         // Adiciona cores para deixar o calendário mais visual
         color: ag.status === 'confirmada' ? '#28a745' : (ag.status === 'pendente' ? '#ffc107' : '#007bff')
@@ -159,6 +162,12 @@ class AgendamentoController {
     }
   
 }
+
+ marcarFalta = asyncHandler(async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    const agendamentoAtualizado = await agendamentoService.marcarNaoComparecimento(id);
+    res.status(200).json(agendamentoAtualizado);
+  });
 }
 
 export default new AgendamentoController();

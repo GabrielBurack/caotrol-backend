@@ -196,6 +196,7 @@ enum status_agenda_enum {
   agendada
   confirmada
   cancelada
+  nao_compareceu
 }
 
 enum status_consulta_enum {
