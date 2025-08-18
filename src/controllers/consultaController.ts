@@ -10,7 +10,13 @@ class ConsultaController {
     const limit = parseInt(req.query.limit as string) || 10;
     const busca = req.query.busca as string | undefined;
 
-    const result = await consultaService.findAll(page, limit, busca);
+    const dataInicioStr = req.query.dataInicio as string | undefined;
+    const dataFimStr = req.query.dataFim as string | undefined;
+    const ordenarPor = req.query.ordenarPor as string | undefined;
+    const dataInicio = dataInicioStr ? new Date(dataInicioStr) : undefined;
+    const dataFim = dataFimStr ? new Date(dataFimStr) : undefined;
+
+    const result = await consultaService.findAll(page, limit, busca,dataInicio, dataFim, ordenarPor);
     res.status(200).json(result);
   });
   

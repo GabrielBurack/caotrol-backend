@@ -1,9 +1,9 @@
-import { consulta, Prisma, status_consulta_enum } from '@prisma/client';
-import consultaRepository from '../repositories/consultaRepository';
-import agendamentoRepository from '../repositories/agendamentoRepository';
-import tutorRepository from '../repositories/tutorRepository';
-import animalRepository from '../repositories/animalRepository';
-import veterinarioRepository from '../repositories/veterinarioRepository';
+import { consulta, Prisma, status_consulta_enum } from "@prisma/client";
+import consultaRepository from "../repositories/consultaRepository";
+import agendamentoRepository from "../repositories/agendamentoRepository";
+import tutorRepository from "../repositories/tutorRepository";
+import animalRepository from "../repositories/animalRepository";
+import veterinarioRepository from "../repositories/veterinarioRepository";
 
 interface DadosConsulta {
   data: Date;
@@ -17,13 +17,19 @@ interface DadosConsulta {
 }
 
 class ConsultaService {
-  
-   async findAll(page: number, limit: number, busca?: string) {
+  async findAll(
+    page: number,
+    limit: number,
+    busca?: string,
+    dataInicio?: Date,
+    dataFim?: Date,
+    ordenarPor?: string
+  ) {
     const skip = (page - 1) * limit;
 
     const [consultas, total] = await Promise.all([
-      consultaRepository.findAll(skip, limit, busca),
-      consultaRepository.countAll(busca),
+      consultaRepository.findAll(skip, limit, busca, dataInicio, dataFim,ordenarPor), 
+      consultaRepository.countAll(busca, dataInicio, dataFim),
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -37,13 +43,21 @@ class ConsultaService {
     };
   }
 
-  async registrarConsultaAgendada(id_agendamento: number, dadosConsulta: DadosConsulta): Promise<consulta> {
+  async registrarConsultaAgendada(
+    id_agendamento: number,
+    dadosConsulta: DadosConsulta
+  ): Promise<consulta> {
     const agendamento = await agendamentoRepository.findById(id_agendamento);
     if (!agendamento) {
-      throw new Error('Agendamento não encontrado.');
+      throw new Error("Agendamento não encontrado.");
     }
-    if (agendamento.status !== 'confirmada' && agendamento.status !== 'pendente') {
-      throw new Error(`Não é possível iniciar uma consulta de um agendamento com status '${agendamento.status}'.`);
+    if (
+      agendamento.status !== "confirmada" &&
+      agendamento.status !== "pendente"
+    ) {
+      throw new Error(
+        `Não é possível iniciar uma consulta de um agendamento com status '${agendamento.status}'.`
+      );
     }
 
     const dadosParaCriar: Prisma.consultaCreateInput = {
@@ -52,19 +66,19 @@ class ConsultaService {
       animal: { connect: { id_animal: agendamento.id_animal } },
       veterinario: { connect: { id_veterinario: agendamento.id_veterinario } },
       prescricao: {
-        create: dadosConsulta.prescricao
+        create: dadosConsulta.prescricao,
       },
       exame: {
-        create: dadosConsulta.exame
-      }
+        create: dadosConsulta.exame,
+      },
     };
 
     const novaConsulta = await consultaRepository.create(dadosParaCriar);
-    
+
     await agendamentoRepository.update(id_agendamento, {
-      consulta: { connect: { id_consulta: novaConsulta.id_consulta } }
+      consulta: { connect: { id_consulta: novaConsulta.id_consulta } },
     });
-    
+
     return novaConsulta;
   }
 
@@ -75,28 +89,28 @@ class ConsultaService {
     const { id_tutor, id_animal, id_veterinario } = ids;
 
     const tutor = await tutorRepository.findById(id_tutor);
-    if (!tutor) throw new Error('Tutor não encontrado.');
+    if (!tutor) throw new Error("Tutor não encontrado.");
     const animal = await animalRepository.findById(id_animal);
-    if (!animal) throw new Error('Animal não encontrado.');
+    if (!animal) throw new Error("Animal não encontrado.");
     const veterinario = await veterinarioRepository.findById(id_veterinario);
-    if (!veterinario) throw new Error('Veterinário não encontrado.');
+    if (!veterinario) throw new Error("Veterinário não encontrado.");
     if (animal.id_tutor !== tutor.id_tutor) {
-      throw new Error('Este animal não pertence ao tutor informado.');
+      throw new Error("Este animal não pertence ao tutor informado.");
     }
 
-     const dadosParaCriar: Prisma.consultaCreateInput = {
+    const dadosParaCriar: Prisma.consultaCreateInput = {
       ...dadosConsulta,
-      status: status_consulta_enum.finalizada, 
+      status: status_consulta_enum.finalizada,
       animal: { connect: { id_animal } },
       veterinario: { connect: { id_veterinario } },
       prescricao: {
-        create: dadosConsulta.prescricao
+        create: dadosConsulta.prescricao,
       },
       exame: {
-        create: dadosConsulta.exame
-      }
+        create: dadosConsulta.exame,
+      },
     };
-    
+
     return consultaRepository.create(dadosParaCriar);
   }
 }
