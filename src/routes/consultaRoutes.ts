@@ -10,4 +10,6 @@ consultaRouter.post('/consultas', authMiddleware, consultaController.registrarCo
 // Rota para buscar uma consulta específica por seu ID
 consultaRouter.get('/consultas/:id_consulta', authMiddleware, consultaController.buscarPorId);
 
+consultaRouter.get('/consultas', authMiddleware, consultaController.findAll);
+
 export default consultaRouter;

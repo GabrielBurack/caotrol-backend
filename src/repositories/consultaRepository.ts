@@ -44,6 +44,54 @@ class ConsultaRepository {
       }
     });
   }
+
+  async findAll(skip: number, take: number, busca?: string): Promise<consulta[]> {
+    const where: Prisma.consultaWhereInput = {};
+
+    if (busca) {
+      where.OR = [
+        { animal: { nome: { contains: busca, mode: 'insensitive' } } },
+        { animal: { tutor: { nome: { contains: busca, mode: 'insensitive' } } } },
+        { animal: { tutor: { cpf: { contains: busca } } } },
+      ];
+    }
+
+    return prisma.consulta.findMany({
+      where,
+      skip,
+      take,
+      orderBy: { data: 'desc' },
+      // --- CORREÇÃO APLICADA AQUI NO 'INCLUDE' ---
+      include: {
+        veterinario: { select: { nome: true } },
+        // Para pegar o animal e o tutor, precisamos aninhar o include
+        animal: {
+          include: {
+            tutor: { // Inclui os dados do tutor DENTRO do animal
+              select: {
+                nome: true
+              }
+            }
+          }
+        }
+      },
+    });
+  }
+
+  async countAll(busca?: string): Promise<number> {
+    const where: Prisma.consultaWhereInput = {};
+
+    if (busca) {
+      where.OR = [
+        { animal: { nome: { contains: busca, mode: 'insensitive' } } },
+        // --- E A MESMA CORREÇÃO AQUI ---
+        { animal: { tutor: { nome: { contains: busca, mode: 'insensitive' } } } },
+        { animal: { tutor: { cpf: { contains: busca } } } },
+      ];
+    }
+
+    return prisma.consulta.count({ where });
+  }
 }
 
 export default new ConsultaRepository();

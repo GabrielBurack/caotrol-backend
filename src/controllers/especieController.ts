@@ -1,15 +1,12 @@
 import { Request, Response } from 'express';
 import especieService from '../services/especieService';
+import asyncHandler from 'express-async-handler';
 
 class EspecieController {
-  async create(req: Request, res: Response) {
-    try {
+  create = asyncHandler(async (req: Request, res: Response) => {
       const especie = await especieService.create(req.body);
       res.status(201).json(especie);
-    } catch (error: any) {
-      res.status(400).json({ message: error.message });
-    }
-  }
+  });
 
   async findAll(req: Request, res: Response) {
     try {

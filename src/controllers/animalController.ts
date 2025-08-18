@@ -3,6 +3,7 @@ import animalService from '../services/animalService';
 import asyncHandler from 'express-async-handler';
 
 class AnimalController {
+  
   create = asyncHandler(async (req: Request, res: Response) => {
     const animal = await animalService.create(req.body);
     res.status(201).json(animal);

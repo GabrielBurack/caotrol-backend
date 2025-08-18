@@ -18,6 +18,25 @@ interface DadosConsulta {
 
 class ConsultaService {
   
+   async findAll(page: number, limit: number, busca?: string) {
+    const skip = (page - 1) * limit;
+
+    const [consultas, total] = await Promise.all([
+      consultaRepository.findAll(skip, limit, busca),
+      consultaRepository.countAll(busca),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+    const currentPage = page;
+
+    return {
+      data: consultas,
+      total,
+      totalPages,
+      currentPage,
+    };
+  }
+
   async registrarConsultaAgendada(id_agendamento: number, dadosConsulta: DadosConsulta): Promise<consulta> {
     const agendamento = await agendamentoRepository.findById(id_agendamento);
     if (!agendamento) {

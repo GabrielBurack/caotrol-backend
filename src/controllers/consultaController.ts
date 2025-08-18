@@ -1,8 +1,18 @@
 import { Request, Response } from 'express';
 import consultaService from '../services/consultaService';
 import consultaRepository from '../repositories/consultaRepository';
+import asyncHandler from 'express-async-handler';
 
 class ConsultaController {
+
+  findAll = asyncHandler(async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const busca = req.query.busca as string | undefined;
+
+    const result = await consultaService.findAll(page, limit, busca);
+    res.status(200).json(result);
+  });
   
   async registrarConsultaAgendada(req: Request, res: Response) {
     try {
