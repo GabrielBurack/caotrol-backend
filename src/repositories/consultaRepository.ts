@@ -14,23 +14,30 @@ class ConsultaRepository {
       },
     });
   }
+// src/repositories/consultaRepository.ts
 
-  async findById(id: number): Promise<consulta | null> {
-    return prisma.consulta.findUnique({
-      where: { id_consulta: id },
-      include: {
-        prescricao: true,
-        exame: true,
-        anamnese: true,
-        veterinario: { select: { nome: true, crmv: true } },
-        animal: {
-          include: {
-            tutor: true,
+async findById(id: number): Promise<consulta | null> {
+  return prisma.consulta.findUnique({
+    where: { id_consulta: id },
+    // ✅ ESTE BLOCO 'include' É A SOLUÇÃO COMPLETA E FINAL
+    include: {
+      prescricao: true,
+      exame: true,
+      anamnese: true,
+      veterinario: { select: { nome: true } },
+      animal: {
+        include: {
+          tutor: true,
+          raca: {
+            include: {
+              especie: true,
+            },
           },
         },
       },
-    });
-  }
+    },
+  });
+}
 
   /**
    * Busca todas as consultas de um animal específico para montar o histórico clínico.
