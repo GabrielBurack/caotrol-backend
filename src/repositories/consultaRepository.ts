@@ -23,6 +23,11 @@ class ConsultaRepository {
         exame: true,
         anamnese: true,
         veterinario: { select: { nome: true, crmv: true } },
+        animal: {
+          include: {
+            tutor: true,
+          },
+        },
       },
     });
   }

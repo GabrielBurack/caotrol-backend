@@ -4,6 +4,7 @@ import * as bcrypt from 'bcryptjs';
 
 
 class UserService {
+  
     async register(userData: Omit<usuario, 'id_usuario'>): Promise<Omit<usuario, 'senha'>>{
 
         // **GERA O HASH DA SENHA**
