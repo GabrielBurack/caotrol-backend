@@ -4,6 +4,8 @@ import agendamentoRepository from "../repositories/agendamentoRepository";
 import tutorRepository from "../repositories/tutorRepository";
 import animalRepository from "../repositories/animalRepository";
 import veterinarioRepository from "../repositories/veterinarioRepository";
+import userRepository from "../repositories/userRepository";
+import { BadRequestError, NotFoundError } from "../helpers/ApiError";
 
 interface DadosConsulta {
   data: Date;
@@ -83,34 +85,39 @@ class ConsultaService {
   }
 
   async registrarConsultaSemAgendamento(
-    ids: { id_tutor: number; id_animal: number; id_veterinario: number },
-    dadosConsulta: DadosConsulta
+    ids: { id_tutor: number; id_animal: number;},
+    dadosConsulta: DadosConsulta,
+    id_usuario_logado: number
   ): Promise<consulta> {
-    const { id_tutor, id_animal, id_veterinario } = ids;
+    const { id_tutor, id_animal } = ids;
+
+    //O backend busca o usuário logado para encontrar seu perfil de veterinário
+    const usuarioLogado = await userRepository.findById(id_usuario_logado);
+    if (!usuarioLogado || !usuarioLogado.id_veterinario) {
+      throw new BadRequestError("Usuário logado não é um veterinário válido ou não está associado a um perfil de veterinário.");
+    }
+    
+    const id_veterinario_correto = usuarioLogado.id_veterinario;
 
     const tutor = await tutorRepository.findById(id_tutor);
-    if (!tutor) throw new Error("Tutor não encontrado.");
+    if (!tutor) throw new NotFoundError('Tutor não encontrado.');
     const animal = await animalRepository.findById(id_animal);
-    if (!animal) throw new Error("Animal não encontrado.");
-    const veterinario = await veterinarioRepository.findById(id_veterinario);
-    if (!veterinario) throw new Error("Veterinário não encontrado.");
+    if (!animal) throw new NotFoundError('Animal não encontrado.');
     if (animal.id_tutor !== tutor.id_tutor) {
-      throw new Error("Este animal não pertence ao tutor informado.");
+      throw new BadRequestError('Este animal não pertence ao tutor informado.');
     }
 
+    // 4. Prepara os dados para criar a consulta com o id_veterinario correto
+    const { prescricao, exame, ...dadosClinicos } = dadosConsulta;
     const dadosParaCriar: Prisma.consultaCreateInput = {
-      ...dadosConsulta,
+      ...dadosClinicos,
       status: status_consulta_enum.finalizada,
       animal: { connect: { id_animal } },
-      veterinario: { connect: { id_veterinario } },
-      prescricao: {
-        create: dadosConsulta.prescricao,
-      },
-      exame: {
-        create: dadosConsulta.exame,
-      },
+      veterinario: { connect: { id_veterinario: id_veterinario_correto } },
+      prescricao: { create: prescricao },
+      exame: { create: exame },
     };
-
+    
     return consultaRepository.create(dadosParaCriar);
   }
 }

@@ -35,21 +35,17 @@ class ConsultaController {
   /**
    * Cria uma consulta avulsa (de encaixe), sem agendamento prévio.
    */
-  async registrarConsultaSemAgendamento(req: Request, res: Response) {
-    try {
-      // O corpo da requisição deve conter os IDs e os dados clínicos
-      const { ids, dadosConsulta } = req.body;
-      if (!ids || !dadosConsulta) {
-        res.status(400).json({ message: 'O corpo da requisição deve conter "ids" e "dadosConsulta".' });
-        return;
-      }
+  registrarConsultaSemAgendamento = asyncHandler(async (req: Request, res: Response) => {
+    const { ids, dadosConsulta } = req.body;
+    const id_usuario_logado = req.usuario!.id;
 
-      const novaConsulta = await consultaService.registrarConsultaSemAgendamento(ids, dadosConsulta);
-      res.status(201).json(novaConsulta);
-    } catch (error: any) {
-      res.status(400).json({ message: error.message });
-    }
-  }
+    const novaConsulta = await consultaService.registrarConsultaSemAgendamento(
+        ids, 
+        dadosConsulta, 
+        id_usuario_logado //para obter o id_veterinario
+    );
+    res.status(201).json(novaConsulta);
+  });
 
   /**
    * Busca todas as consultas de um animal específico para exibir o histórico.
