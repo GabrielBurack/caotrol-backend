@@ -69,15 +69,13 @@ class AgendamentoRepository {
           not: "cancelada",
         },
       },
-      // A MUDANÇA PRINCIPAL É TROCAR 'INCLUDE' POR 'SELECT'
       select: {
-        // 1. Selecione os campos que você precisa da tabela 'agendamento'
         id_agenda: true,
         data_exec: true,
         status: true,
-        id_consulta: true, // <-- CAMPO ADICIONADO AQUI
-
-        // 2. Inclua os dados das relações que você precisa
+        id_consulta: true, 
+        id_animal: true, 
+        id_tutor: true,
         animal: { select: { nome: true } },
         tutor: { select: { nome: true } },
         veterinario: { select: { nome: true } },

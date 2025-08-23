@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import agendamentoService from "../services/agendamentoService";
 import { Prisma } from "@prisma/client";
-import asyncHandler from 'express-async-handler';
-
+import asyncHandler from "express-async-handler";
 
 // 2. Crie um tipo mais específico para o agendamento com os dados incluídos
 type AgendamentoComRelacoes = Prisma.agendamentoGetPayload<{
@@ -19,20 +18,18 @@ class AgendamentoController {
    * @query {string} id_veterinario - ID do veterinário.
    * @query {string} dia - Dia no formato YYYY-MM-DD.
    */
-  async listarHorariosDisponiveis(req: Request, res: Response): Promise<void> {
-    try {
+  listarHorariosDisponiveis = asyncHandler(
+    async (req: Request, res: Response) => {
       const id_veterinario = parseInt(req.query.id_veterinario as string);
       const dia = req.query.dia as string;
 
       // Validação mais robusta dos parâmetros
       if (isNaN(id_veterinario) || !dia) {
         // Correção: ajustado o 'return' e melhorada a validação
-        res
-          .status(400)
-          .json({
-            message:
-              "Os parâmetros id_veterinario (numérico) e dia (texto) são obrigatórios.",
-          });
+        res.status(400).json({
+          message:
+            "Os parâmetros id_veterinario (numérico) e dia (texto) são obrigatórios.",
+        });
         return;
       }
 
@@ -41,10 +38,8 @@ class AgendamentoController {
         dia
       );
       res.status(200).json(horarios);
-    } catch (error: any) {
-      res.status(400).json({ message: error.message });
     }
-  }
+  );
 
   /**
    * Cria um novo agendamento.
@@ -130,42 +125,54 @@ class AgendamentoController {
       const { start, end } = req.query;
 
       if (!start || !end) {
-        res.status(400).json({ message: 'Os parâmetros "start" e "end" são obrigatórios.' });
-        return 
+        res
+          .status(400)
+          .json({ message: 'Os parâmetros "start" e "end" são obrigatórios.' });
+        return;
       }
 
       const dataInicio = new Date(start as string);
       const dataFim = new Date(end as string);
 
-      const agendamentos: AgendamentoComRelacoes[] = await agendamentoService.buscarPorPeriodo(dataInicio, dataFim);
-      
+      const agendamentos: AgendamentoComRelacoes[] =
+        await agendamentoService.buscarPorPeriodo(dataInicio, dataFim);
+
       // Formata os dados para o padrão que o FullCalendar espera
-      const eventosFormatados = agendamentos.map(ag => ({
+      const eventosFormatados = agendamentos.map((ag) => ({
         id: ag.id_agenda,
         title: `${ag.animal.nome} - ${ag.tutor.nome}`,
         start: ag.data_exec, // O FullCalendar vai lidar com o fuso horário
-        extendedProps: { // Dados extras que podemos usar no futuro
-            veterinario: ag.veterinario.nome,
-            status: ag.status,
-            realizada: ag.id_consulta !== null 
+        extendedProps: {
+          // Dados extras que podemos usar no futuro
+          veterinario: ag.veterinario.nome,
+          status: ag.status,
+          realizada: ag.id_consulta !== null,
+          id_animal: ag.id_animal,
+          id_tutor: ag.id_tutor,
         },
         // Adiciona cores para deixar o calendário mais visual
-        color: ag.status === 'confirmada' ? '#28a745' : (ag.status === 'pendente' ? '#ffc107' : ag.status === 'nao_compareceu' ? '#dc3545' : '#007bff')
+        color:
+          ag.status === "confirmada"
+            ? "#28a745"
+            : ag.status === "pendente"
+            ? "#ffc107"
+            : ag.status === "nao_compareceu"
+            ? "#dc3545"
+            : "#007bff",
       }));
 
       // Garante que a resposta seja sempre um array JSON
       res.status(200).json(eventosFormatados);
-
     } catch (error: any) {
       console.error("Erro em buscarPorPeriodo:", error); // Log de erro mais específico
-      res.status(500).json({ message: 'Erro interno ao buscar agendamentos.' });
+      res.status(500).json({ message: "Erro interno ao buscar agendamentos." });
     }
-  
-}
+  }
 
- marcarFalta = asyncHandler(async (req: Request, res: Response) => {
+  marcarFalta = asyncHandler(async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
-    const agendamentoAtualizado = await agendamentoService.marcarNaoComparecimento(id);
+    const agendamentoAtualizado =
+      await agendamentoService.marcarNaoComparecimento(id);
     res.status(200).json(agendamentoAtualizado);
   });
 }
