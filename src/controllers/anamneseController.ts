@@ -1,29 +1,19 @@
 import { Request, Response } from 'express';
 import anamneseService from '../services/anamneseService';
+import asyncHandler from 'express-async-handler';
 
 class AnamneseController {
-  async create(req: Request, res: Response) {
-    try {
-      const id_consulta = parseInt(req.params.id_consulta);
-      const dadosAnamnese = req.body;
+  create = asyncHandler(async (req: Request, res: Response) => {
+    const id_consulta = parseInt(req.params.id_consulta);
+    const novaAnamnese = await anamneseService.registrar(id_consulta, req.body);
+    res.status(201).json(novaAnamnese);
+  });
 
-      const novaAnamnese = await anamneseService.registrar(id_consulta, dadosAnamnese);
-      res.status(201).json(novaAnamnese);
-    } catch (error: any) {
-      res.status(400).json({ message: error.message });
-    }
-  }
-
-  async findAllByAnimalId(req: Request, res: Response){
-    try {
-      const id_animal = +req.params.id_animal;
-      const historico = await anamneseService.buscarHistoricoPorAnimal(id_animal);
-      res.status(200).json(historico);
-
-    } catch (error: any) {
-      res.status(400).json({ message: error.message });
-    }
-  }
+  findAllByAnimal = asyncHandler(async (req: Request, res: Response) => {
+    const id_animal = parseInt(req.params.id_animal);
+    const historico = await anamneseService.buscarHistoricoPorAnimal(id_animal);
+    res.status(200).json(historico);
+  });
 }
 
 export default new AnamneseController();

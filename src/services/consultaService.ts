@@ -16,6 +16,11 @@ interface DadosConsulta {
   tratamento?: string;
   prescricao?: { descricao: string }[];
   exame?: { solicitacao: string }[];
+  anamnese?: { 
+    castrado?: boolean;
+    alergias?: string;
+    obs?: string;
+  };
 }
 
 class ConsultaService {
@@ -68,6 +73,9 @@ class ConsultaService {
       status: status_consulta_enum.finalizada,
       animal: { connect: { id_animal: agendamento.id_animal } },
       veterinario: { connect: { id_veterinario: agendamento.id_veterinario } },
+      anamnese: {
+        create: dadosConsulta.anamnese // Envelopa os dados da anamnese em 'create'
+      },
       prescricao: {
         create: dadosConsulta.prescricao,
       },
@@ -109,7 +117,7 @@ class ConsultaService {
     }
 
     // 4. Prepara os dados para criar a consulta com o id_veterinario correto
-    const { prescricao, exame, ...dadosClinicos } = dadosConsulta;
+    const { prescricao, exame, anamnese, ...dadosClinicos } = dadosConsulta;
     const dadosParaCriar: Prisma.consultaCreateInput = {
       ...dadosClinicos,
       status: status_consulta_enum.finalizada,
@@ -117,6 +125,7 @@ class ConsultaService {
       veterinario: { connect: { id_veterinario: id_veterinario_correto } },
       prescricao: { create: prescricao },
       exame: { create: exame },
+      anamnese: {create: anamnese}
     };
     
     return consultaRepository.create(dadosParaCriar);
