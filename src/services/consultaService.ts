@@ -64,6 +64,7 @@ class ConsultaService {
 
     const dadosParaCriar: Prisma.consultaCreateInput = {
       ...dadosConsulta,
+      data: agendamento.data_exec,
       status: status_consulta_enum.finalizada,
       animal: { connect: { id_animal: agendamento.id_animal } },
       veterinario: { connect: { id_veterinario: agendamento.id_veterinario } },
