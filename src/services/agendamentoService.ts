@@ -62,7 +62,7 @@ class AgendamentoService {
       );
     }
 
-    const dataExecucao = new Date(`${dia}T${horario}:00.000Z`);
+    const dataExecucao = new Date(`${dia}T${horario}:00`); 
 
 
     // 1. Calcula o limite de 24 horas a partir de agora

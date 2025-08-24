@@ -33,7 +33,7 @@ class AnimalRepository {
     }
     
     return prisma.animal.findMany({
-      where: { ativo: true },
+      where: where,
       skip: skip,
       take: take,
       orderBy: {
