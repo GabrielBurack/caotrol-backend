@@ -12,10 +12,10 @@ class TutorService {
     return tutorRepository.create(data);
   }
 
-  async findAll(page: number, limit: number, busca?: string) {
+  async findAll(page: number, limit: number, busca?: string, ordenarPor?: string) {
     const skip = (page - 1) * limit;
     const [tutores, total] = await Promise.all([
-      tutorRepository.findAll(skip, limit, busca),
+      tutorRepository.findAll(skip, limit, busca, ordenarPor),
       tutorRepository.countAll(busca),
     ]);
     const totalPages = Math.ceil(total / limit);
