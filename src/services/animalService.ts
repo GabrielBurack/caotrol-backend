@@ -20,11 +20,11 @@ class AnimalService {
     return animalRepository.create(data);
   }
 
-  async findAll(page: number, limit: number, busca?: string) {
+  async findAll(page: number, limit: number, busca?: string, ordenarPor?: string) {
 
     const skip = (page - 1) * limit;
     const [animais, total] = await Promise.all([
-      animalRepository.findAll(skip, limit, busca),
+      animalRepository.findAll(skip, limit, busca, ordenarPor),
       animalRepository.countAll(busca)
     ]);
     const totalPages = Math.ceil(total / limit);
