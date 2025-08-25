@@ -4,6 +4,8 @@ import asyncHandler from 'express-async-handler';
 
 class TutorController {
   create = asyncHandler(async (req: Request, res: Response) => {
+     console.log('1. Controller recebeu a requisição para criar tutor.');
+    console.log('Body recebido:', req.body);
     const novoTutor = await tutorService.create(req.body);
     res.status(201).json(novoTutor);
   });
