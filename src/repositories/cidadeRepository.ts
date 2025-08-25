@@ -6,6 +6,12 @@ class CidadeRepository {
     return prisma.cidade.create({ data });
   }
 
+  async findById(id_cidade: number): Promise<cidade | null> {
+    return prisma.cidade.findUnique({
+      where: { id_cidade },
+    });
+  }
+
   async findAllByEstado(id_estado: number): Promise<cidade[]> {
     return prisma.cidade.findMany({
       where: { id_estado },
