@@ -73,7 +73,7 @@ class AgendamentoRepository {
         id_agenda: true,
         data_exec: true,
         status: true,
-<<<<<<< HEAD
+
 
         id_consulta: true,
         id_animal: true,
@@ -83,12 +83,9 @@ class AgendamentoRepository {
 
        
         id_tutor: true,
-
-=======
         id_consulta: true, 
         id_animal: true, 
         id_tutor: true,
->>>>>>> 5e7e9d7d689bbd3ddbad88e3a477eacfc11e0ff3
         animal: { select: { nome: true } },
         tutor: { select: { nome: true } },
         veterinario: { select: { nome: true } },
