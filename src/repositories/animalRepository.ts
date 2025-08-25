@@ -20,7 +20,7 @@ class AnimalRepository {
     });
   }
 
-  async findAll(skip: number, take: number, busca?: string): Promise<animal[]> {
+  async findAll(skip: number, take: number, busca?: string, ordenarPor?: string): Promise<animal[]> {
     const where: Prisma.animalWhereInput = {
       ativo: true,
     };
@@ -31,14 +31,21 @@ class AnimalRepository {
         mode: 'insensitive',
       };
     }
-    
+
+    let orderBy: Prisma.animalOrderByWithRelationInput = { id_animal: 'desc' };
+    if (ordenarPor === 'nome_asc') {
+      orderBy = { nome: 'asc' };
+    } else if (ordenarPor === 'nome_desc') {
+      orderBy = { nome: 'desc' };
+    } else if (ordenarPor === 'id_asc') {
+      orderBy = { id_animal: 'asc' };
+    }
+
     return prisma.animal.findMany({
       where: where,
       skip: skip,
       take: take,
-      orderBy: {
-        nome: 'asc'
-      },
+      orderBy,
       include: {
         tutor: true,
         raca: {
@@ -51,7 +58,7 @@ class AnimalRepository {
   }
 
   //contar o total de registros
- async countAll(busca?: string): Promise<number> {
+  async countAll(busca?: string): Promise<number> {
     const where: Prisma.animalWhereInput = {
       ativo: true,
     };
@@ -69,26 +76,26 @@ class AnimalRepository {
   }
 
   async findAllByTutorId(id_tutor: number) {
-  return prisma.animal.findMany({
-    where: {
-      id_tutor: id_tutor,
-      ativo: true
-    },
-    select: {
-      id_animal: true,
-      nome: true,
-      raca: {
-        select: {
-          nome: true,
-          especie: {
-            select: {
-              nome: true
+    return prisma.animal.findMany({
+      where: {
+        id_tutor: id_tutor,
+        ativo: true
+      },
+      select: {
+        id_animal: true,
+        nome: true,
+        raca: {
+          select: {
+            nome: true,
+            especie: {
+              select: {
+                nome: true
+              }
             }
           }
         }
       }
-    }
-  });
+    });
 
   }
   async findById(id: number): Promise<animal | null> {

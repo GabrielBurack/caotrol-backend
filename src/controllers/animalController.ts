@@ -13,7 +13,9 @@ class AnimalController {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const busca = req.query.busca as string | undefined;
-    const animais = await animalService.findAll(page, limit, busca);
+    const ordenarPor = req.query.ordenarPor as string | undefined;
+
+    const animais = await animalService.findAll(page, limit, busca, ordenarPor);
     res.status(200).json(animais);
   });
 
