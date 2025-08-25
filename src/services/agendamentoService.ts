@@ -187,6 +187,8 @@ class AgendamentoService {
         id_animal: ag.id_animal,
         id_tutor: ag.id_tutor,
       },
+      color: ag.status === 'confirmada' ? '#28a745' : (['pendente', 'agendada'].includes(ag.status) ? '#ffc107' : ag.status === 'nao_compareceu' ? '#dc3545' : '#007bff')
+
     }));
   }
 
