@@ -84,7 +84,7 @@ class AgendamentoService {
 
 
     const dataExecucao = new Date(`${dia}T${horario}:00`); 
-    const dataExecucao = new Date(`${dia}T${horario}:00`);
+  
 
 
     if (dataExecucao <= new Date()) {

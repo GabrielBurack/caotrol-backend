@@ -73,17 +73,16 @@ class AgendamentoRepository {
         id_agenda: true,
         data_exec: true,
         status: true,
-<<<<<<< HEAD
+
         id_consulta: true,
         id_animal: true,
 
 
         // 2. Inclua os dados das relações que você precisa
 
-        id_consulta: true, 
-        id_animal: true, 
+       
         id_tutor: true,
->>>>>>> 9595d9c89fa802e48ebcfdb279cf8bc70f85d95c
+
         animal: { select: { nome: true } },
         tutor: { select: { nome: true } },
         veterinario: { select: { nome: true } },
