@@ -12,10 +12,24 @@ class CidadeRepository {
     });
   }
 
-  async findAllByEstado(id_estado: number): Promise<cidade[]> {
+  async findAllByEstado(id_estado: number, busca?: string, limite = 20): Promise<cidade[]> {
+    const where: Prisma.cidadeWhereInput = {
+      id_estado: id_estado,
+    };
+
+    if (busca) {
+      where.nome = {
+        contains: busca,
+        mode: 'insensitive', 
+      };
+    }
+
     return prisma.cidade.findMany({
-      where: { id_estado },
-      orderBy: { nome: 'asc' }
+      where,
+      take: limite, 
+      orderBy: {
+        nome: 'asc',
+      },
     });
   }
 
