@@ -21,6 +21,7 @@ class EnderecoService {
         logradouro: data.logradouro,
         bairro: data.bairro,
         cidade: data.localidade,
+        estado: data.estado,
         uf: data.uf
       };
     } catch (error) {
