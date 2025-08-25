@@ -12,8 +12,9 @@ class TutorController {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const busca = req.query.busca as string | undefined;
+    const ordenarPor = req.query.ordenarPor as string | undefined;
 
-    const resultadoPaginado = await tutorService.findAll(page, limit, busca);
+    const resultadoPaginado = await tutorService.findAll(page, limit, busca, ordenarPor);
     res.status(200).json(resultadoPaginado);
   });
 

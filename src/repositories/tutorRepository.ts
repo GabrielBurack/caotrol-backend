@@ -13,7 +13,7 @@ class TutorRepository {
   }
 
   // Retorna todos os tutores ativos
-  async findAll(skip: number, take: number, busca?: string): Promise<tutor[]> {
+  async findAll(skip: number, take: number, busca?: string, ordenarPor?: string): Promise<tutor[]> {
     const where: Prisma.tutorWhereInput = {
       ativo: true,
     };
@@ -26,13 +26,22 @@ class TutorRepository {
       ];
     }
 
+    let orderBy: Prisma.tutorOrderByWithRelationInput = { id_tutor: 'desc' };
+
+    if (ordenarPor === 'nome_asc') {
+      orderBy = { nome: 'asc' };
+    } else if (ordenarPor === 'nome_desc') {
+      orderBy = { nome: 'desc' };
+    }
+    else if (ordenarPor === 'id_asc') {
+      orderBy = { id_tutor: 'asc' };
+    }
+
     return prisma.tutor.findMany({
       where: where,
       skip: skip,
       take: take,
-      orderBy: {
-        nome: 'asc',
-      },
+      orderBy: orderBy
     });
   }
 
