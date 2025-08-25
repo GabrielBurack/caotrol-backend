@@ -82,9 +82,13 @@ class AgendamentoService {
       );
     }
 
+<<<<<<< HEAD
 
     const dataExecucao = new Date(`${dia}T${horario}:00`); 
   
+=======
+    const dataExecucao = new Date(`${dia}T${horario}:00`);
+>>>>>>> 5e7e9d7d689bbd3ddbad88e3a477eacfc11e0ff3
 
 
     if (dataExecucao <= new Date()) {
