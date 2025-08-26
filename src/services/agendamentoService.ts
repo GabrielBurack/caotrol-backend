@@ -82,8 +82,10 @@ class AgendamentoService {
       );
     }
 
-    const dataExecucao = new Date(`${dia}T${horario}:00`);
 
+
+    const dataExecucao = new Date(`${dia}T${horario}:00`); 
+  
 
     if (dataExecucao <= new Date()) {
       throw new BadRequestError(
@@ -186,6 +188,7 @@ class AgendamentoService {
         id_tutor: ag.id_tutor,
       },
       color: ag.status === 'confirmada' ? '#28a745' : (['pendente', 'agendada'].includes(ag.status) ? '#ffc107' : ag.status === 'nao_compareceu' ? '#dc3545' : '#007bff')
+
     }));
   }
 
