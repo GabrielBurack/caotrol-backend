@@ -11,7 +11,7 @@ interface TutorCreateData {
     telefone: string;
     data_nasc?: string;
     cep?: string;
-    rua?: string;
+    logradouro?: string;
     num?: string;
     bairro?: string;
     id_cidade?: number; 
@@ -40,7 +40,7 @@ class TutorService {
       telefone: data.telefone, 
       data_nasc: data.data_nasc ? new Date(data.data_nasc) : undefined,
       cep: data.cep || undefined,
-      rua: data.rua || undefined,
+      logradouro: data.logradouro || undefined,
       num: data.num || undefined,
       bairro: data.bairro || undefined,
       id_cidade: data.id_cidade || undefined,
