@@ -5,7 +5,7 @@ import adminAuthMiddleware from "../middlewares/adminAuthMiddleware";
 
 const userRouter = Router();
 
-userRouter.post('/usuarios/registrar', authMiddleware, adminAuthMiddleware, userController.register);
-userRouter.get('/usuarios', authMiddleware, adminAuthMiddleware, userController.findAll);
+userRouter.post('/usuarios/registrar',  userController.register);
+userRouter.get('/usuarios',  userController.findAll);
 
 export default userRouter;

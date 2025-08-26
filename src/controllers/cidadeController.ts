@@ -10,8 +10,14 @@ class CidadeController {
 
   findAllByEstado = asyncHandler(async (req: Request, res: Response) => {
     const id_estado = parseInt(req.params.id_estado);
+    const cidades = await cidadeService.findAllByEstado(id_estado);
+    res.status(200).json(cidades);
+  });
+
+  search = asyncHandler(async (req: Request, res: Response) => {
+    const id_estado = parseInt(req.params.id_estado);
     const busca = req.query.busca as string | undefined;
-    const cidades = await cidadeService.findAllByEstado(id_estado, busca);
+    const cidades = await cidadeService.search(id_estado, busca || '');
     res.status(200).json(cidades);
   });
 }

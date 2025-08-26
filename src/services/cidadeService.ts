@@ -13,12 +13,23 @@ class CidadeService {
     return cidadeRepository.create(data);
   }
 
-  async findAllByEstado(id_estado: number, busca?: string): Promise<cidade[]> {
+  async findAllByEstado(id_estado: number): Promise<cidade[]> {
     const estado = await estadoRepository.findById(id_estado);
     if (!estado) {
       throw new NotFoundError("O estado informado não existe.");
     }
-    return cidadeRepository.findAllByEstado(id_estado, busca);
+    return cidadeRepository.findAllByEstado(id_estado);
+  }
+
+  async search(id_estado: number, busca: string): Promise<cidade[]> {
+    const estado = await estadoRepository.findById(id_estado);
+    if (!estado) {
+      throw new NotFoundError("O estado informado не existe.");
+    }
+    if (!busca || busca.trim().length < 2) {
+      return [];
+    }
+    return cidadeRepository.searchByName(id_estado, busca);
   }
 }
 
