@@ -1,33 +1,30 @@
 import userRepository from '../repositories/userRepository';
-import veterinarioRepository from "../repositories/veterinarioRepository"; // 1. IMPORTAR O REPOSITÓRIO
+import veterinarioRepository from "../repositories/veterinarioRepository";
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { BadRequestError, UnauthorizedError } from '../helpers/ApiError';
 
 class AuthService {
-    async login(login: string, senhaInserida: string): Promise<string | null>{
+    
+    async login(login?: string, senha?: string): Promise<string> {
+        if (!login || !senha) {
+            throw new BadRequestError('Os campos "login" e "senha" são obrigatórios.');
+        }
+
         const user = await userRepository.findByLogin(login);
+        const senhaValida = user ? await bcrypt.compare(senha, user.senha) : false;
 
-        if (!user) {
-            throw new Error('Usuário não encontrado'); 
+        if (!user || !senhaValida) {
+            throw new UnauthorizedError('Login ou senha inválidos.');
         }
 
-        const senhaValida = await bcrypt.compare(senhaInserida, user.senha);
-        if (!senhaValida) {
-            throw new Error("Senha inválida");
-        }
-
-        // 2. PREPARAR O CONTEÚDO DO TOKEN (PAYLOAD)
         const payload: { [key: string]: any } = {
             id: user.id_usuario,
             tipo: user.tipo,
-            id_veterinario: user.id_veterinario
         };
         
-        // 3. SE FOR UM VETERINÁRIO, BUSCAR E ADICIONAR O NOME
         if (user.id_veterinario) {
+            payload.id_veterinario = user.id_veterinario;
             const veterinario = await veterinarioRepository.findById(user.id_veterinario);
             if (veterinario) {
                 payload.nome_veterinario = veterinario.nome;
@@ -35,7 +32,7 @@ class AuthService {
         }
 
         const token = jwt.sign(
-            payload, // 4. USAR O NOVO PAYLOAD COM O NOME
+            payload,
             process.env.JWT_SECRET as string,
             { expiresIn: '8h' } 
         );
