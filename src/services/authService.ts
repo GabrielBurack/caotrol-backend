@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import { BadRequestError, UnauthorizedError } from '../helpers/ApiError';
 
 class AuthService {
-    
+
     async login(login?: string, senha?: string): Promise<string> {
         if (!login || !senha) {
             throw new BadRequestError('Os campos "login" e "senha" são obrigatórios.');
@@ -21,20 +21,21 @@ class AuthService {
         const payload: { [key: string]: any } = {
             id: user.id_usuario,
             tipo: user.tipo,
+            nome_exibicao: user.login
         };
-        
+
         if (user.id_veterinario) {
             payload.id_veterinario = user.id_veterinario;
             const veterinario = await veterinarioRepository.findById(user.id_veterinario);
-            if (veterinario) {
-                payload.nome_veterinario = veterinario.nome;
+            if (veterinario?.nome) {
+                payload.nome_exibicao = veterinario.nome;
             }
         }
 
         const token = jwt.sign(
             payload,
             process.env.JWT_SECRET as string,
-            { expiresIn: '8h' } 
+            { expiresIn: '8h' }
         );
 
         return token;
