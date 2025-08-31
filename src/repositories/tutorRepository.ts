@@ -4,7 +4,6 @@ import { Prisma, tutor } from "@prisma/client";
 class TutorRepository {
   // Criação de novo tutor
   async create(data: Prisma.tutorUncheckedCreateInput): Promise<tutor> {
-
     return await prisma.tutor.create({
       data: {
         ...data,

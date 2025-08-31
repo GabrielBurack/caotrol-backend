@@ -20,7 +20,6 @@ interface TutorCreateData {
 class TutorService {
 
   async create(data: TutorCreateData): Promise<tutor> {
-
     const tutorExistente = await tutorRepository.findByCpf(data.cpf);
     if (tutorExistente) {
       throw new BadRequestError("Um tutor com este CPF já está cadastrado.");
@@ -32,7 +31,7 @@ class TutorService {
         if (!cidade) {
             throw new NotFoundError("A cidade informada não foi encontrada.");
         }
-    }
+    } 
 
     const dadosParaCriar: Prisma.tutorUncheckedCreateInput = {
       nome: data.nome,
@@ -45,7 +44,6 @@ class TutorService {
       bairro: data.bairro || undefined,
       id_cidade: data.id_cidade || undefined,
     };
-
     return tutorRepository.create(dadosParaCriar);
   }
 
