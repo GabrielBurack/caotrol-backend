@@ -44,6 +44,26 @@ class PrescricaoRepository {
       where: { id_prescricao },
     });
   }
+
+  // Busca uma prescrição com todos os dados aninhados necessários para o PDF
+  async findByIdComplet(id_prescricao: number) {
+    return prisma.prescricao.findUnique({
+      where: { id_prescricao },
+      include: {
+        consulta: {
+          include: {
+            veterinario: true,
+            animal: {
+              include: {
+                tutor: true,
+                raca: { include: { especie: true } }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
 }
 
 export default new PrescricaoRepository();

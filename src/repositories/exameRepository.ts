@@ -44,6 +44,26 @@ class ExameRepository {
       where: { id_exame },
     });
   }
+
+  // Busca um exame com todos os dados aninhados necessários para o PDF
+  async findByIdComplet(id_exame: number) {
+    return prisma.exame.findUnique({
+      where: { id_exame },
+      include: {
+        consulta: {
+          include: {
+            veterinario: true,
+            animal: {
+              include: {
+                tutor: true,
+                raca: { include: { especie: true } }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
 }
 
 export default new ExameRepository();

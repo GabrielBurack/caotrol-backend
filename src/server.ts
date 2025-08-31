@@ -20,6 +20,7 @@ import prescricaoRouter from "./routes/prescricaoRoutes";
 import cidadeRouter from "./routes/cidadeRoutes";
 import estadoRouter from "./routes/estadoRoutes";
 import enderecoRouter from "./routes/enderecoRoutes";
+import documentoRouter from "./routes/documentoRoutes";
 
 const app = express();
 const port = 3000;
@@ -52,8 +53,7 @@ app.use("/api", prescricaoRouter);
 app.use("/api", cidadeRouter);
 app.use("/api", estadoRouter);
 app.use("/api", enderecoRouter);
-
-
+app.use("/api", documentoRouter);
 
 tarefasAgendadasService.iniciar();
 app.use(errorMiddleware);
