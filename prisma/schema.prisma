@@ -134,7 +134,7 @@ model tutor {
   cpf         String        @unique @db.VarChar(14)
   data_nasc   DateTime?     @db.Date
   telefone    String        @db.VarChar(20)
-  cep         String?       @db.VarChar(7)
+  cep         String?       @db.VarChar(8)
   logradouro  String?       @db.VarChar(255)
   num         String?       @db.VarChar(10)
   bairro      String?       @db.VarChar(100)
