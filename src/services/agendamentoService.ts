@@ -175,7 +175,6 @@ class AgendamentoService {
       dataFim
     )) as AgendamentoComRelacoes[];
 
-    // A formatação dos dados para o frontend é uma responsabilidade do Service
     return agendamentos.map((ag) => ({
       id: ag.id_agenda,
       title: `${ag.animal.nome} - ${ag.tutor.nome}`,
@@ -187,8 +186,17 @@ class AgendamentoService {
         id_animal: ag.id_animal,
         id_tutor: ag.id_tutor,
       },
-      color: ag.status === 'confirmada' ? '#28a745' : (['pendente', 'agendada'].includes(ag.status) ? '#ffc107' : ag.status === 'nao_compareceu' ? '#dc3545' : '#007bff')
-
+      color: ag.id_consulta !== null
+    ? '#6c757d' // (finalizada)
+    : ag.status === 'confirmada'
+      ? '#28a745' 
+      : ag.status === 'agendada'
+        ? '#007bff' 
+        : ag.status === 'pendente'
+          ? '#ffc107' 
+          : ag.status === 'nao_compareceu'
+            ? '#dc3545' 
+            : '#000000' 
     }));
   }
 
