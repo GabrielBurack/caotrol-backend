@@ -67,8 +67,8 @@ model cidade {
 model consulta {
   id_consulta    Int                  @id @default(autoincrement())
   data           DateTime             @db.Timestamp(6)
-  freq           Decimal?             @db.Decimal(4, 2)
-  resp           Decimal?             @db.Decimal(4, 2)
+  freq          Int?      
+  resp          Int?     
   tpc            Decimal?             @db.Decimal(4, 2)
   peso           Decimal?             @db.Decimal(4, 2)
   status         status_consulta_enum
