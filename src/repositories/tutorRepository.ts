@@ -96,6 +96,13 @@ class TutorRepository {
   async findById(id: number): Promise<tutor | null> {
     return prisma.tutor.findUnique({
       where: { id_tutor: id },
+      include: {
+        cidade: {
+          include: {
+            estado: true, 
+          },
+        },
+      },
     });
   }
 
