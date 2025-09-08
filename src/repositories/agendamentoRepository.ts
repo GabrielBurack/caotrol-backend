@@ -90,24 +90,30 @@ class AgendamentoRepository {
    * @param inicioDoDia - O objeto Date para o início do dia (00:00:00).
    * @param fimDoDia - O objeto Date para o fim do dia (23:59:59).
    */
-  async getContagensDoDia(inicioDoDia: Date, fimDoDia: Date) {
+  async getContagensDoDia(inicioDoDia: Date, fimDoDia: Date, id_veterinario?: number) {
+
+     const whereBase = {
+      data_exec: { gte: inicioDoDia, lte: fimDoDia },
+      id_veterinario: id_veterinario 
+    };
+
     const agendados = await prisma.agendamento.count({
       where: {
-        data_exec: { gte: inicioDoDia, lte: fimDoDia },
+        ...whereBase,
         status: { in: ["agendada", "pendente", "confirmada"] },
       },
     });
 
     const confirmados = await prisma.agendamento.count({
       where: {
-        data_exec: { gte: inicioDoDia, lte: fimDoDia },
+        ...whereBase,
         status: "confirmada",
       },
     });
 
     const atendidos = await prisma.agendamento.count({
       where: {
-        data_exec: { gte: inicioDoDia, lte: fimDoDia },
+        ...whereBase,
         id_consulta: { not: null }, // Chave para saber se foi atendido
       },
     });
@@ -115,9 +121,8 @@ class AgendamentoRepository {
     // Faltas: agendamentos para hoje, cujo horário já passou, não foram cancelados e não geraram consulta.
     const faltas = await prisma.agendamento.count({
       where: {
-        data_exec: { gte: inicioDoDia, lt: new Date() }, // Do início do dia até AGORA
-        status: { in: ["agendada", "pendente", "confirmada"] },
-        id_consulta: null,
+        ...whereBase,
+        status: 'nao_compareceu',
       },
     });
 
