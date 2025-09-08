@@ -35,7 +35,8 @@ class AgendamentoController {
 
   buscarPorPeriodo = asyncHandler(async (req: Request, res: Response) => {
     const { start, end } = req.query;
-    const eventos = await agendamentoService.buscarPorPeriodo(start as string, end as string);
+    const usuario_logado = req.usuario; 
+    const eventos = await agendamentoService.buscarPorPeriodo(usuario_logado as any, start as string, end as string);
     res.status(200).json(eventos);
   });
 

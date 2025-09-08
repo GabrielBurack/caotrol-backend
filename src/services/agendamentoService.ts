@@ -1,4 +1,4 @@
-import { agendamento, Prisma, status_agenda_enum } from "@prisma/client";
+import { agendamento, Prisma, status_agenda_enum, tipo_usuario_enum} from "@prisma/client";
 import agendamentoRepository from "../repositories/agendamentoRepository";
 import tutorRepository from "../repositories/tutorRepository";
 import animalRepository from "../repositories/animalRepository";
@@ -161,18 +161,26 @@ class AgendamentoService {
     });
   }
 
-  async buscarPorPeriodo(start?: string, end?: string) {
+  async buscarPorPeriodo(usuario_logado: { tipo: string, id_veterinario?: number }, start?: string, end?: string) {
     if (!start || !end) {
       throw new BadRequestError(
         'Os parâmetros "start" e "end" são obrigatórios.'
       );
     }
+
+    let id_veterinario_filtro: number | undefined = undefined;
+
+    if (usuario_logado.tipo === tipo_usuario_enum.veterinario) {
+        id_veterinario_filtro = usuario_logado.id_veterinario;
+    }
+
     const dataInicio = new Date(start);
     const dataFim = new Date(end);
 
     const agendamentos = (await agendamentoRepository.findByDateRange(
       dataInicio,
-      dataFim
+      dataFim,
+      id_veterinario_filtro
     )) as AgendamentoComRelacoes[];
 
     return agendamentos.map((ag) => ({
