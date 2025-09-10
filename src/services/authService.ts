@@ -60,7 +60,7 @@ class AuthService {
       reset_token_expires: passwordResetExpires
     });
 
-    const resetURL = `http://localhost:3001/resetar-senha/${resetToken}`; // URL do frontend
+    const resetURL = `${process.env.FRONTEND_URL}/resetar-senha/${resetToken}`; // URL do frontend
 
     try {
         await sendEmail({
