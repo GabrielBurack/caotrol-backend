@@ -100,6 +100,7 @@ async function main() {
   const adminUser = await prisma.usuario.create({
     data: {
       login: 'admin',
+      email: 'admin@email.com',
       senha: senhaPadraoHash,
       tipo: tipo_usuario_enum.admin,
     },
@@ -108,6 +109,7 @@ async function main() {
   const vetUser = await prisma.usuario.create({
     data: {
       login: 'dr.jose',
+      email: 'drjose@email.com',
       senha: senhaPadraoHash,
       tipo: tipo_usuario_enum.veterinario,
       id_veterinario: drJose.id_veterinario, // Vincula o usuário ao perfil de veterinário

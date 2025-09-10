@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import userService from "../services/userService";
+import AsyncHandler from "express-async-handler";
 
 class UserController {
   async register(req: Request, res: Response) {
@@ -24,6 +25,14 @@ class UserController {
       res.status(500).json({ message: "Erro ao listar usuário", error });
     }
   }
+
+  update = AsyncHandler(async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    const idUsuarioLogado = req.usuario!.id; // Pega o ID do admin logado
+
+    const usuarioAtualizado = await userService.update(id, req.body, idUsuarioLogado);
+    res.status(200).json(usuarioAtualizado);
+  });
 }
 
 export default new UserController();

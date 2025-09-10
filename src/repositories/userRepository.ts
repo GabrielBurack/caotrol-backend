@@ -1,5 +1,5 @@
 import prisma from "../prisma";
-import { usuario } from "@prisma/client";
+import { Prisma, usuario } from "@prisma/client";
 
 class UserRepository {
   async create(data: Omit<usuario, "id_usuario">): Promise<usuario> {
@@ -28,6 +28,26 @@ class UserRepository {
 
   async countAll(): Promise<number> {
     return prisma.usuario.count();
+  }
+
+  async findByEmail(email: string): Promise<usuario | null> {
+    return prisma.usuario.findUnique({ where: { email } });
+  }
+
+  async findByResetToken(token: string): Promise<usuario | null> {
+    return prisma.usuario.findFirst({
+      where: {
+        reset_token: token,
+        reset_token_expires: { gt: new Date() } // gt: Greater Than (maior que a data atual)
+      }
+    });
+  }
+
+  async update(id: number, data: Prisma.usuarioUpdateInput): Promise<usuario> {
+    return prisma.usuario.update({
+      where: { id_usuario: id },
+      data,
+    });
   }
 }
 
