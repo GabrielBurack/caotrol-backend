@@ -33,6 +33,14 @@ class UserController {
     const usuarioAtualizado = await userService.update(id, req.body, idUsuarioLogado);
     res.status(200).json(usuarioAtualizado);
   });
+
+  deactivate = AsyncHandler(async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    const idUsuarioLogado = req.usuario!.id;
+
+    await userService.deactivate(id, idUsuarioLogado);
+    res.status(204).send();
+  });
 }
 
 export default new UserController();

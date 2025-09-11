@@ -18,6 +18,7 @@ class UserRepository {
 
   async findAll(skip: number, take: number): Promise<usuario[]> {
     return prisma.usuario.findMany({
+      where: { ativo: true },
       skip: skip,
       take: take,
       orderBy: {
@@ -27,7 +28,9 @@ class UserRepository {
   }
 
   async countAll(): Promise<number> {
-    return prisma.usuario.count();
+    return prisma.usuario.count({
+        where: { ativo: true }
+      });
   }
 
   async findByEmail(email: string): Promise<usuario | null> {
@@ -38,7 +41,7 @@ class UserRepository {
     return prisma.usuario.findFirst({
       where: {
         reset_token: token,
-        reset_token_expires: { gt: new Date() } // gt: Greater Than (maior que a data atual)
+        reset_token_expires: { gt: new Date() } 
       }
     });
   }
@@ -47,6 +50,13 @@ class UserRepository {
     return prisma.usuario.update({
       where: { id_usuario: id },
       data,
+    });
+  }
+
+  async deactivate(id: number): Promise<usuario> {
+    return prisma.usuario.update({
+      where: { id_usuario: id },
+      data: { ativo: false },
     });
   }
 }

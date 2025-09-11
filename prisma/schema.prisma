@@ -151,6 +151,7 @@ model usuario {
   login          String            @unique @db.VarChar(50)
   senha          String            @db.VarChar(255)
   email          String            @unique @db.VarChar(255)
+  ativo          Boolean           @default(true)
   tipo           tipo_usuario_enum
   reset_token          String?   @unique
   reset_token_expires  DateTime?
