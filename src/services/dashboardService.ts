@@ -32,7 +32,26 @@ class DashboardService {
 
     // O mesmo ID de filtro é passado para AMBAS as funções, garantindo consistência
     const resumoDiario = await agendamentoRepository.getContagensDoDia(hojeInicio, hojeFim, id_veterinario_final);
-    const proximasConsultas = await agendamentoRepository.getProximosAgendamentos(new Date(), hojeFim, id_veterinario_final);
+    
+    const proximasConsultasBruto = await agendamentoRepository.getProximosAgendamentos(new Date(), hojeFim, id_veterinario_final);
+    const proximasConsultas = proximasConsultasBruto.map(ag => {
+        let cor = '#007bff'; // Azul (padrão para 'agendada')
+
+        if (ag.id_consulta !== null) {
+            cor = '#6c757d'; // Cinza (realizada/finalizada)
+        } else if (ag.status === 'confirmada') {
+            cor = '#28a745'; // Verde
+        } else if (ag.status === 'pendente') {
+            cor = '#ffc107'; // Amarelo
+        } else if (ag.status === 'nao_compareceu') {
+            cor = '#dc3545'; // Vermelho
+        }
+
+        return {
+            ...ag, // Mantém todos os dados originais do agendamento
+            cor: cor // Adiciona a nova propriedade 'cor'
+        };
+    });
     
     return { resumoDiario, proximasConsultas };
   }
