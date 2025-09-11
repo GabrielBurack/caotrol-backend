@@ -4,6 +4,12 @@ import authMiddleware from '../middlewares/authMiddleware';
 
 const documentoRouter = Router();
 
+// Rota para imprimir o receituário completo de uma consulta
+documentoRouter.get('/consultas/:id_consulta/prescricoes/imprimir', authMiddleware, documentoController.gerarPrescricoesDaConsulta);
+
+// Rota para imprimir a solicitação de exames completa de uma consulta
+documentoRouter.get('/consultas/:id_consulta/exames/imprimir', authMiddleware, documentoController.gerarExamesDaConsulta);
+
 // Rota para visualização/impressão ANTES de salvar
 documentoRouter.post('/documentos/prescricao/visualizar', authMiddleware, documentoController.gerarPrescricaoPreview);
 

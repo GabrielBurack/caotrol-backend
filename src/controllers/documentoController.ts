@@ -41,6 +41,26 @@ class DocumentoController {
     res.setHeader('Content-Disposition', 'inline; filename=exame_preview.pdf');
     res.send(pdfBuffer);
   });
+
+  // Gerar PDF de prescrições da consulta
+  gerarPrescricoesDaConsulta = asyncHandler(async (req: Request, res: Response) => {
+    const id_consulta = parseInt(req.params.id_consulta);
+    const pdfBuffer = await documentoService.gerarPdfPrescricoesDaConsulta(id_consulta);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename=receituario_consulta_${id_consulta}.pdf`);
+    res.send(pdfBuffer);
+  });
+
+  // Gerar PDF de exames da consulta
+  gerarExamesDaConsulta = asyncHandler(async (req: Request, res: Response) => {
+    const id_consulta = parseInt(req.params.id_consulta);
+    const pdfBuffer = await documentoService.gerarPdfExamesDaConsulta(id_consulta);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename=exames_consulta_${id_consulta}.pdf`);
+    res.send(pdfBuffer);
+  });
 }
 
 export default new DocumentoController();

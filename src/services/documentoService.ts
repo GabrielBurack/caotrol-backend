@@ -1,14 +1,18 @@
 import PDFDocument from 'pdfkit';
+import path from 'path';
 import { NotFoundError } from '../helpers/ApiError';
 import prescricaoRepository from '../repositories/prescricaoRepository';
 import exameRepository from '../repositories/exameRepository';
+import consultaRepository from '../repositories/consultaRepository';
 
 // Interface para os dados do preview da Prescrição
 interface PrescricaoPreviewData {
     nome_tutor: string;
     nome_animal: string;
     especie: string;
-    raca: string; 
+    raca: string;
+    idade: string;
+    peso: string;
     nome_veterinario: string;
     crmv_veterinario: string;
     data_consulta: string;
@@ -21,53 +25,124 @@ interface ExamePreviewData {
     nome_animal: string;
     especie: string;
     raca: string; 
+    idade: string; 
+    peso: string; 
     nome_veterinario: string;
     crmv_veterinario: string;
     data_consulta: string;
     solicitacoes_exame: string[];
 }
 
+function calcularIdade(dataNasc: Date | null): string {
+    if (!dataNasc) return 'N/A';
+    const hoje = new Date();
+    const nasc = new Date(dataNasc);
+    let idadeAnos = hoje.getFullYear() - nasc.getFullYear();
+    let idadeMeses = hoje.getMonth() - nasc.getMonth();
+    if (idadeMeses < 0 || (idadeMeses === 0 && hoje.getDate() < nasc.getDate())) {
+        idadeAnos--;
+        idadeMeses += 12;
+    }
+    return `${idadeAnos} anos e ${idadeMeses} meses`;
+}
+
 class DocumentoService {
   /**
    * Gera um PDF de uma prescrição com base nos dados fornecidos (preview).
    */
-  async gerarPdfPrescricaoPreview(dados: PrescricaoPreviewData): Promise<Buffer> {
+   async gerarPdfPrescricaoPreview(dados: PrescricaoPreviewData): Promise<Buffer> {
     return new Promise((resolve, reject) => {
-        const doc = new PDFDocument({ size: 'A5', margin: 50 });
-        const buffers: Buffer[] = [];
-        doc.on('data', buffers.push.bind(buffers));
-        doc.on('end', () => resolve(Buffer.concat(buffers)));
-        doc.on('error', reject);
+      const doc = new PDFDocument({ size: 'A4', margin: 0 });
+      const buffers: Buffer[] = [];
+      doc.on('data', buffers.push.bind(buffers));
+      doc.on('end', () => resolve(Buffer.concat(buffers)));
+      doc.on('error', reject);
 
-        // --- CONSTRUÇÃO DO PDF ---
-        doc.fontSize(16).font('Helvetica-Bold').text('Clínica Veterinária Lauro Vet', { align: 'center' });
-        doc.moveDown(3);
-        doc.fontSize(14).font('Helvetica-Bold').text('RECEITUÁRIO', { align: 'center' });
-        doc.moveDown(2);
+      // --- CONSTRUÇÃO DO PDF COM TEMPLATE ---
+      const templatePath = path.join(__dirname, '../../assets/modelo-receituario.png');
+      doc.image(templatePath, 0, 0, { width: doc.page.width, height: doc.page.height });
 
-        doc.fontSize(11).font('Helvetica-Bold').text('Tutor:', { continued: true }).font('Helvetica').text(` ${dados.nome_tutor}`);
-        doc.font('Helvetica-Bold').text('Animal:', { continued: true }).font('Helvetica').text(` ${dados.nome_animal}`);
-        doc.font('Helvetica-Bold').text('Espécie/Raça:', { continued: true }).font('Helvetica').text(` ${dados.especie} / ${dados.raca}`);
-        doc.moveDown(2);
+      doc.fontSize(11).font('Helvetica');
+      
+      // --- POSICIONAMENTO DOS DADOS DINÂMICOS ---
+      // ATENÇÃO: Os valores de X e Y são chutes iniciais. Você precisará ajustá-los.
+      
+      // Linha 1: Animal e Tutor
+      doc.text(dados.nome_animal, 140, 179); // Posição (X, Y)
+      doc.text(dados.nome_tutor, 350, 179);
 
-        doc.fontSize(12).font('Helvetica');
-        dados.descricoes_prescricao.forEach((descricao, index) => {
-            doc.text(`${index + 1}. ${descricao}`, {
-                indent: 20,
-                align: 'justify'
-            });
-            doc.moveDown(0.5);
-        });
+      // Linha 2: Espécie e Raça
+      doc.text(dados.especie, 140, 204);
+      doc.text(dados.raca, 350, 204);
 
-        doc.moveDown(4);
-        doc.fontSize(11).font('Helvetica').text('________________________________', { align: 'center' });
-        doc.font('Helvetica-Bold').text(dados.nome_veterinario, { align: 'center' });
-        doc.font('Helvetica').text(`CRMV: ${dados.crmv_veterinario}`, { align: 'center' });
-        doc.moveDown(3);
-        const dataEmissao = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(new Date(dados.data_consulta));
-        doc.fontSize(10).text(`Emitido em: ${dataEmissao}`, { align: 'right' });
-        doc.end();
+      // Linha 3: Idade e Peso (Exemplo)
+      doc.text(dados.idade, 130, 229);
+      doc.text(dados.peso, 350, 229);
+
+      // Corpo da Prescrição (a partir da posição Y = 250)
+      let yPosition = 320;
+      dados.descricoes_prescricao.forEach(descricao => {
+          doc.text("- " + descricao, 60, yPosition, {
+              width: 470, // Largura da caixa de texto
+              align: 'justify'
+          });
+          yPosition += 40; // Incrementa a posição Y para a próxima linha
+      });
+
+      doc.end();
     });
+  }
+
+  /**
+   * NOVA FUNÇÃO: Gera um PDF com TODAS as prescrições de uma consulta.
+   */
+  async gerarPdfPrescricoesDaConsulta(id_consulta: number): Promise<Buffer> {
+    const consulta = await consultaRepository.findById(id_consulta);
+    if (!consulta) throw new NotFoundError('Consulta não encontrada.');
+
+    // Prepara a lista de descrições a partir da consulta
+    const descricoes = consulta.prescricao.map(p => p.descricao || '');
+    
+    const dadosParaPdf: PrescricaoPreviewData = {
+        nome_tutor: consulta.animal.tutor.nome,
+        nome_animal: consulta.animal.nome,
+        especie: consulta.animal.raca.especie.nome,
+        raca: consulta.animal.raca.nome,
+        idade: calcularIdade(consulta.animal.data_nasc),
+        peso: consulta.peso ? `${consulta.peso} Kg` : 'N/A',
+        nome_veterinario: consulta.veterinario.nome,
+        crmv_veterinario: consulta.veterinario.crmv,
+        data_consulta: consulta.data.toISOString(),
+        descricoes_prescricao: descricoes
+    };
+
+    // Reutiliza nossa função de preview que já sabe lidar com múltiplos itens
+    return this.gerarPdfPrescricaoPreview(dadosParaPdf);
+  }
+
+  /**
+   * NOVA FUNÇÃO: Gera um PDF com TODAS as solicitações de exame de uma consulta.
+   */
+  async gerarPdfExamesDaConsulta(id_consulta: number): Promise<Buffer> {
+    const consulta = await consultaRepository.findById(id_consulta);
+    if (!consulta) throw new NotFoundError('Consulta não encontrada.');
+
+    const solicitacoes = consulta.exame.map(e => e.solicitacao || '');
+
+    const dadosParaPdf: ExamePreviewData = {
+        nome_tutor: consulta.animal.tutor.nome,
+        nome_animal: consulta.animal.nome,
+        especie: consulta.animal.raca.especie.nome,
+        raca: consulta.animal.raca.nome,
+        idade: calcularIdade(consulta.animal.data_nasc),
+        peso: consulta.peso ? `${consulta.peso} Kg` : 'N/A',
+        nome_veterinario: consulta.veterinario.nome,
+        crmv_veterinario: consulta.veterinario.crmv,
+        data_consulta: consulta.data.toISOString(),
+        solicitacoes_exame: solicitacoes
+    };
+
+    return this.gerarPdfExamePreview(dadosParaPdf);
   }
 
   /**
@@ -83,6 +158,8 @@ class DocumentoService {
         nome_animal: prescricao.consulta.animal.nome,
         especie: prescricao.consulta.animal.raca.especie.nome,
         raca: prescricao.consulta.animal.raca.nome,
+        idade: calcularIdade(prescricao.consulta.animal.data_nasc),
+        peso: prescricao.consulta.peso ? `${prescricao.consulta.peso} Kg` : 'N/A',
         nome_veterinario: prescricao.consulta.veterinario.nome,
         crmv_veterinario: prescricao.consulta.veterinario.crmv,
         data_consulta: prescricao.consulta.data.toISOString(),
@@ -93,44 +170,40 @@ class DocumentoService {
   }
 
   /**
-   * Gera um PDF de uma solicitação de exame com base nos dados fornecidos (preview).
+   * Gera um PDF de uma solicitação de exame usando o template de imagem.
    */
   async gerarPdfExamePreview(dados: ExamePreviewData): Promise<Buffer> {
     return new Promise((resolve, reject) => {
-      const doc = new PDFDocument({ size: 'A5', margin: 50 });
-      const buffers: Buffer[] = [];
-      doc.on('data', buffers.push.bind(buffers));
-      doc.on('end', () => resolve(Buffer.concat(buffers)));
-      doc.on('error', reject);
+        const doc = new PDFDocument({ size: 'A4', margin: 0 });
+        const buffers: Buffer[] = [];
+        doc.on('data', buffers.push.bind(buffers));
+        doc.on('end', () => resolve(Buffer.concat(buffers)));
+        doc.on('error', reject);
 
-      // Layout similar ao de prescrição, mas com título e corpo diferentes
-      doc.fontSize(16).font('Helvetica-Bold').text('Clínica Veterinária Lauro Vet', { align: 'center' });
-      doc.moveDown(3);
-      doc.fontSize(14).font('Helvetica-Bold').text('SOLICITAÇÃO DE EXAME', { align: 'center' });
-      doc.moveDown(2);
+        const templatePath = path.join(__dirname, '../../assets/modelo-exame.png');
+        doc.image(templatePath, 0, 0, { width: doc.page.width, height: doc.page.height });
 
-      doc.fontSize(11).font('Helvetica-Bold').text('Tutor:', { continued: true }).font('Helvetica').text(` ${dados.nome_tutor}`);
-      doc.font('Helvetica-Bold').text('Animal:', { continued: true }).font('Helvetica').text(` ${dados.nome_animal}`);
-      doc.font('Helvetica-Bold').text('Espécie/Raça:', { continued: true }).font('Helvetica').text(` ${dados.especie} / ${dados.raca}`);
-      doc.moveDown(2);
-      
-      doc.fontSize(12).font('Helvetica-Bold').text('Exames Solicitados:');
-      doc.moveDown(0.5);
-      
-      doc.font('Helvetica');
-      dados.solicitacoes_exame.forEach((solicitacao, index) => {
-          doc.text(`${index + 1}. ${solicitacao}`, { indent: 20, align: 'justify' });
-          doc.moveDown(0.5);
-      });
-      
-      doc.moveDown(4);
-      doc.fontSize(11).font('Helvetica').text('________________________________', { align: 'center' });
-      doc.font('Helvetica-Bold').text(dados.nome_veterinario, { align: 'center' });
-      doc.font('Helvetica').text(`CRMV: ${dados.crmv_veterinario}`, { align: 'center' });
-      doc.moveDown(3);
-      const dataEmissao = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(new Date(dados.data_consulta));
-      doc.fontSize(10).text(`Emitido em: ${dataEmissao}`, { align: 'right' });
-      doc.end();
+        doc.fontSize(11).font('Helvetica');
+
+        // Posições para os dados do exame (similares à prescrição)
+        doc.text(dados.nome_animal, 140, 179);
+        doc.text(dados.nome_tutor, 350, 179);
+        doc.text(dados.especie, 140, 204);
+        doc.text(dados.raca, 350, 204);
+
+        doc.text(dados.idade, 130, 229);
+        doc.text(dados.peso, 350, 229);
+        
+        let yPosition = 320;
+        dados.solicitacoes_exame.forEach(solicitacao => {
+            doc.text("- "+solicitacao, 60, yPosition, {
+                width: 470,
+                align: 'justify'
+            });
+            yPosition += 30;
+        });
+
+        doc.end();
     });
   }
 
@@ -146,6 +219,8 @@ class DocumentoService {
         nome_animal: exame.consulta.animal.nome,
         especie: exame.consulta.animal.raca.especie.nome,
         raca: exame.consulta.animal.raca.nome,
+        idade: calcularIdade(exame.consulta.animal.data_nasc),
+        peso: exame.consulta.peso ? `${exame.consulta.peso} Kg` : 'N/A',
         nome_veterinario: exame.consulta.veterinario.nome,
         crmv_veterinario: exame.consulta.veterinario.crmv,
         data_consulta: exame.consulta.data.toISOString(),

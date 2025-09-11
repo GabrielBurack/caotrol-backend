@@ -16,15 +16,14 @@ class ConsultaRepository {
   }
 // src/repositories/consultaRepository.ts
 
-async findById(id: number): Promise<consulta | null> {
+async findById(id: number) {
   return prisma.consulta.findUnique({
     where: { id_consulta: id },
-    // ✅ ESTE BLOCO 'include' É A SOLUÇÃO COMPLETA E FINAL
     include: {
       prescricao: true,
       exame: true,
       anamnese: true,
-      veterinario: { select: { nome: true } },
+      veterinario: true,
       animal: {
         include: {
           tutor: true,
