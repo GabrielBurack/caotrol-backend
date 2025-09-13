@@ -1,3 +1,4 @@
+// src/services/consultaService.ts
 import { consulta, Prisma, status_consulta_enum } from "@prisma/client";
 import consultaRepository from "../repositories/consultaRepository";
 import agendamentoRepository from "../repositories/agendamentoRepository";
@@ -7,16 +8,23 @@ import veterinarioRepository from "../repositories/veterinarioRepository";
 import userRepository from "../repositories/userRepository";
 import { BadRequestError, NotFoundError } from "../helpers/ApiError";
 
+// ✨ INTERFACE ATUALIZADA PARA INCLUIR TODOS OS CAMPOS ✨
 interface DadosConsulta {
-  data: Date;
+  data?: Date;
   peso?: number;
   altura?: number;
   queixa: string;
+  suspeita?: string;
   diagnostico?: string;
   tratamento?: string;
+  mucosas?: string;
+  temperatura?: number;
+  tpc?: number;
+  freq?: number;
+  resp?: number;
   prescricao?: { descricao: string }[];
   exame?: { solicitacao: string }[];
-  anamnese?: { 
+  anamnese?: {
     castrado?: boolean;
     alergias?: string;
     obs?: string;
@@ -24,6 +32,7 @@ interface DadosConsulta {
 }
 
 class ConsultaService {
+  // ... (a função findAll continua igual)
   async findAll(
     page: number,
     limit: number,
@@ -35,7 +44,7 @@ class ConsultaService {
     const skip = (page - 1) * limit;
 
     const [consultas, total] = await Promise.all([
-      consultaRepository.findAll(skip, limit, busca, dataInicio, dataFim,ordenarPor), 
+      consultaRepository.findAll(skip, limit, busca, dataInicio, dataFim,ordenarPor),
       consultaRepository.countAll(busca, dataInicio, dataFim),
     ]);
 
@@ -50,6 +59,7 @@ class ConsultaService {
     };
   }
 
+
   async registrarConsultaAgendada(
     id_agendamento: number,
     dadosConsulta: DadosConsulta
@@ -58,30 +68,31 @@ class ConsultaService {
     if (!agendamento) {
       throw new Error("Agendamento não encontrado.");
     }
-    if (
-      agendamento.status !== "confirmada" &&
-      agendamento.status !== "pendente"
-    ) {
+    if (agendamento.status !== "confirmada" && agendamento.status !== "pendente") {
       throw new Error(
         `Não é possível iniciar uma consulta de um agendamento com status '${agendamento.status}'.`
       );
     }
 
+    // ✨ LÓGICA DE CRIAÇÃO CORRIGIDA E SEGURA ✨
     const dadosParaCriar: Prisma.consultaCreateInput = {
-      ...dadosConsulta,
       data: new Date(),
       status: status_consulta_enum.finalizada,
+      queixa: dadosConsulta.queixa,
+      diagnostico: dadosConsulta.diagnostico,
+      tratamento: dadosConsulta.tratamento,
+      suspeita: dadosConsulta.suspeita,
+      peso: dadosConsulta.peso,
+      temperatura: dadosConsulta.temperatura,
+      tpc: dadosConsulta.tpc,
+      freq: dadosConsulta.freq,
+      resp: dadosConsulta.resp,
+      mucosas: dadosConsulta.mucosas,
       animal: { connect: { id_animal: agendamento.id_animal } },
       veterinario: { connect: { id_veterinario: agendamento.id_veterinario } },
-      anamnese: {
-        create: dadosConsulta.anamnese // Envelopa os dados da anamnese em 'create'
-      },
-      prescricao: {
-        create: dadosConsulta.prescricao,
-      },
-      exame: {
-        create: dadosConsulta.exame,
-      },
+      anamnese: dadosConsulta.anamnese ? { create: dadosConsulta.anamnese } : undefined,
+      prescricao: { create: dadosConsulta.prescricao },
+      exame: { create: dadosConsulta.exame },
     };
 
     const novaConsulta = await consultaRepository.create(dadosParaCriar);
@@ -94,18 +105,16 @@ class ConsultaService {
   }
 
   async registrarConsultaSemAgendamento(
-    ids: { id_tutor: number; id_animal: number;},
+    ids: { id_tutor: number; id_animal: number },
     dadosConsulta: DadosConsulta,
     id_usuario_logado: number
   ): Promise<consulta> {
     const { id_tutor, id_animal } = ids;
 
-    //O backend busca o usuário logado para encontrar seu perfil de veterinário
     const usuarioLogado = await userRepository.findById(id_usuario_logado);
     if (!usuarioLogado || !usuarioLogado.id_veterinario) {
-      throw new BadRequestError("Usuário logado não é um veterinário válido ou não está associado a um perfil de veterinário.");
+      throw new BadRequestError("Usuário logado não é um veterinário válido.");
     }
-    
     const id_veterinario_correto = usuarioLogado.id_veterinario;
 
     const tutor = await tutorRepository.findById(id_tutor);
@@ -116,18 +125,27 @@ class ConsultaService {
       throw new BadRequestError('Este animal não pertence ao tutor informado.');
     }
 
-    // 4. Prepara os dados para criar a consulta com o id_veterinario correto
-    const { prescricao, exame, anamnese, ...dadosClinicos } = dadosConsulta;
+    // ✨ LÓGICA DE CRIAÇÃO CORRIGIDA E SEGURA ✨
     const dadosParaCriar: Prisma.consultaCreateInput = {
-      ...dadosClinicos,
+      data: new Date(),
       status: status_consulta_enum.finalizada,
+      queixa: dadosConsulta.queixa,
+      diagnostico: dadosConsulta.diagnostico,
+      tratamento: dadosConsulta.tratamento,
+      suspeita: dadosConsulta.suspeita,
+      peso: dadosConsulta.peso,
+      temperatura: dadosConsulta.temperatura,
+      tpc: dadosConsulta.tpc,
+      freq: dadosConsulta.freq,
+      resp: dadosConsulta.resp,
+      mucosas: dadosConsulta.mucosas,
       animal: { connect: { id_animal } },
       veterinario: { connect: { id_veterinario: id_veterinario_correto } },
-      prescricao: { create: prescricao },
-      exame: { create: exame },
-      anamnese: {create: anamnese}
+      anamnese: dadosConsulta.anamnese ? { create: dadosConsulta.anamnese } : undefined,
+      prescricao: { create: dadosConsulta.prescricao },
+      exame: { create: dadosConsulta.exame },
     };
-    
+
     return consultaRepository.create(dadosParaCriar);
   }
 }
