@@ -23,6 +23,7 @@ class VacinaService {
     const dadosParaCriar: Prisma.vacinaUncheckedCreateInput = {
       ...dadosVacina,
       data_aplic: dataAplicacao, 
+      data_prox: dadosVacina.data_prox ? new Date(dadosVacina.data_prox) : null,
       id_animal: id_animal,
     };
 
