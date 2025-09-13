@@ -4,6 +4,8 @@ import animalRepository from "../repositories/animalRepository";
 import { NotFoundError, BadRequestError } from "../helpers/ApiError";
 import estadoRepository from "../repositories/estadoRepository";
 import cidadeRepository from "../repositories/cidadeRepository";
+import prisma from "../prisma";
+
 
 interface TutorCreateData {
     nome: string;
@@ -90,7 +92,21 @@ class TutorService {
 
   async deactivate(id: number): Promise<tutor> {
     await this.findById(id);
-    return tutorRepository.deactivate(id);
+
+    const transacaoResultados = await prisma.$transaction([
+      prisma.tutor.update({
+        where: { id_tutor: id },
+        data: { ativo: false },
+      }),
+      prisma.animal.updateMany({
+        where: { id_tutor: id },
+        data: { ativo: false },
+      })
+    ]);
+    
+    const tutorDesativado = transacaoResultados[0];
+    
+    return tutorDesativado;
   }
 }
 

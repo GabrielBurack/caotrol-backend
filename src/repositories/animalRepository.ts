@@ -133,6 +133,13 @@ class AnimalRepository {
       data: { ativo: false },
     });
   }
+
+  async deactivateByTutorId(id_tutor: number) {
+    return prisma.animal.updateMany({
+      where: { id_tutor: id_tutor },
+      data: { ativo: false },
+    });
+  }
 }
 
 export default new AnimalRepository();
