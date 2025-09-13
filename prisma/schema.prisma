@@ -169,6 +169,7 @@ model vacina {
   data_aplic DateTime  @db.Date
   data_prox  DateTime? @db.Date
   status     String?   @db.VarChar(50)
+  dose       String?
   id_animal  Int
   animal     animal    @relation(fields: [id_animal], references: [id_animal], onDelete: Cascade, map: "fk_vacina_animal")
 }
