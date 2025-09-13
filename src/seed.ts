@@ -103,6 +103,7 @@ async function main() {
       email: 'admin@email.com',
       senha: senhaPadraoHash,
       tipo: tipo_usuario_enum.admin,
+      email_verificado: true,
     },
   });
 
@@ -112,7 +113,8 @@ async function main() {
       email: 'drjose@email.com',
       senha: senhaPadraoHash,
       tipo: tipo_usuario_enum.veterinario,
-      id_veterinario: drJose.id_veterinario, // Vincula o usuário ao perfil de veterinário
+      id_veterinario: drJose.id_veterinario, 
+      email_verificado: true,
     },
   });
   console.log('- Usuário admin e veterinário criados.');
