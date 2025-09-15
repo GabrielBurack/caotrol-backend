@@ -57,12 +57,11 @@ class AgendamentoRepository {
     dataFim: Date,
     id_veterinario?: number
   ): Promise<any[]> {
-    // O tipo de retorno agora é mais complexo
     return prisma.agendamento.findMany({
       where: {
         data_exec: {
           gte: dataInicio,
-          lte: dataFim, // Usar 'lte' (menor ou igual) é mais seguro para pegar o dia inteiro
+          lte: dataFim, 
         },
         id_veterinario: id_veterinario,
         status: {
@@ -114,11 +113,10 @@ class AgendamentoRepository {
     const atendidos = await prisma.agendamento.count({
       where: {
         ...whereBase,
-        id_consulta: { not: null }, // Chave para saber se foi atendido
+        id_consulta: { not: null }, 
       },
     });
 
-    // Faltas: agendamentos para hoje, cujo horário já passou, não foram cancelados e não geraram consulta.
     const faltas = await prisma.agendamento.count({
       where: {
         ...whereBase,

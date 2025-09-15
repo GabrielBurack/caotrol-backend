@@ -1,4 +1,3 @@
-// src/services/consultaService.ts
 import { consulta, Prisma, status_consulta_enum } from "@prisma/client";
 import consultaRepository from "../repositories/consultaRepository";
 import agendamentoRepository from "../repositories/agendamentoRepository";
@@ -8,7 +7,6 @@ import veterinarioRepository from "../repositories/veterinarioRepository";
 import userRepository from "../repositories/userRepository";
 import { BadRequestError, NotFoundError } from "../helpers/ApiError";
 
-// ✨ INTERFACE ATUALIZADA PARA INCLUIR TODOS OS CAMPOS ✨
 interface DadosConsulta {
   data?: Date;
   peso?: number;
@@ -32,7 +30,6 @@ interface DadosConsulta {
 }
 
 class ConsultaService {
-  // ... (a função findAll continua igual)
   async findAll(
     page: number,
     limit: number,
@@ -74,7 +71,6 @@ class ConsultaService {
       );
     }
 
-    // ✨ LÓGICA DE CRIAÇÃO CORRIGIDA E SEGURA ✨
     const dadosParaCriar: Prisma.consultaCreateInput = {
       data: new Date(),
       status: status_consulta_enum.finalizada,
@@ -125,7 +121,6 @@ class ConsultaService {
       throw new BadRequestError('Este animal não pertence ao tutor informado.');
     }
 
-    // ✨ LÓGICA DE CRIAÇÃO CORRIGIDA E SEGURA ✨
     const dadosParaCriar: Prisma.consultaCreateInput = {
       data: new Date(),
       status: status_consulta_enum.finalizada,

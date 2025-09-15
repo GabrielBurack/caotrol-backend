@@ -7,7 +7,7 @@ export const HORARIOS_FIXOS = [
 ];
 
 const TAMANHO_SLOT_MIN = 30;
-const DURACAO_CONSULTA_MINUTOS = 60; // mude aqui se precisar
+const DURACAO_CONSULTA_MINUTOS = 60; 
 const SLOTS_POR_CONSULTA = DURACAO_CONSULTA_MINUTOS / TAMANHO_SLOT_MIN;
 
 function addMinutesToTimeStr(hhmm: string, minutes: number): string | null {
