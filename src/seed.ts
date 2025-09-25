@@ -113,41 +113,74 @@ async function main() {
   // 4. CRIANDO DADOS DE EXEMPLO DA CLÍNICA
   console.log('🏥 Criando dados de exemplo da clínica...');
 
-  // Criar Veterinário
-  const drJose = await prisma.veterinario.create({
-    data: {
-      nome: 'Dr. José Lauro',
-      cpf: '11122233344',
-      crmv: 'CRMV-PR-12345',
-    },
-  });
-  console.log('- Veterinário de exemplo criado.');
+  // --- Veterinários ---
+const drJose = await prisma.veterinario.create({
+  data: {
+    nome: 'Dr. José Lauro',
+    cpf: '11122233344',
+    crmv: 'CRMV-PR-12345',
+  },
+});
 
-  // Criar Usuários
-  const salt = await bcrypt.genSalt(10);
-  const senhaPadraoHash = await bcrypt.hash('123456', salt);
+// NOVO VETERINÁRIO ADICIONADO
+const draAna = await prisma.veterinario.create({
+  data: {
+    nome: 'Dra. Ana Costa',
+    cpf: '55566677788',
+    crmv: 'CRMV-PR-54321',
+  },
+});
+console.log('- Perfis de veterinários de exemplo criados.');
 
-  const adminUser = await prisma.usuario.create({
-    data: {
-      login: 'admin',
-      email: 'admin@email.com',
-      senha: senhaPadraoHash,
-      tipo: tipo_usuario_enum.admin,
-      email_verificado: true,
-    },
-  });
 
-  const vetUser = await prisma.usuario.create({
+// --- Usuários ---
+const salt = await bcrypt.genSalt(10);
+const senhaPadraoHash = await bcrypt.hash('123456', salt);
+
+const adminUser = await prisma.usuario.create({
+  data: {
+    login: 'admin',
+    email: 'admin@caotrol.com',
+    senha: senhaPadraoHash,
+    tipo: tipo_usuario_enum.admin,
+    email_verificado: true,
+  },
+});
+
+const vetUserJose = await prisma.usuario.create({
+  data: {
+    login: 'dr.jose',
+    email: 'dr.jose@caotrol.com',
+    senha: senhaPadraoHash,
+    tipo: tipo_usuario_enum.veterinario,
+    id_veterinario: drJose.id_veterinario, // Vincula ao Dr. José
+    email_verificado: true,
+  },
+});
+
+// NOVO USUÁRIO VETERINÁRIO ADICIONADO
+const vetUserAna = await prisma.usuario.create({
     data: {
-      login: 'dr.jose',
-      email: 'drjose@email.com',
+      login: 'dra.ana',
+      email: 'dra.ana@caotrol.com',
       senha: senhaPadraoHash,
       tipo: tipo_usuario_enum.veterinario,
-      id_veterinario: drJose.id_veterinario,
+      id_veterinario: draAna.id_veterinario, // Vincula à Dra. Ana
       email_verificado: true,
     },
-  });
-  console.log('- Usuário admin e veterinário criados.');
+});
+
+// NOVO USUÁRIO PADRÃO ADICIONADO
+const recepcaoUser = await prisma.usuario.create({
+    data: {
+      login: 'recepcao',
+      email: 'recepcao@caotrol.com',
+      senha: senhaPadraoHash,
+      tipo: tipo_usuario_enum.padrao,
+      email_verificado: true,
+    },
+});
+console.log('- Usuários de exemplo (admin, veterinários, padrão) criados.');
 
   // Criar Tutor de exemplo
   const pontaGrossa = await prisma.cidade.findFirst({ where: { nome: 'Ponta Grossa' } });
