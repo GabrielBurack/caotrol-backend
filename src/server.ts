@@ -25,9 +25,23 @@ import documentoRouter from "./routes/documentoRoutes";
 const app = express();
 const port = process.env.PORT || 3000;
 
+const allowedOrigins = [
+  'http://localhost:5173', 
+  'http://localhost:5174', 
+  process.env.FRONTEND_URL || '' // Adiciona a URL de produção
+];
+
 app.use(
   cors({
-    origin: ["http://localhost:5174", "http://localhost:5173"], // Permite requisições do seu frontend
+    origin: function (origin, callback) {
+      // Permite requisições sem 'origin' (como apps mobile ou Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = 'A política de CORS para este site não permite acesso da origem especificada.';
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
