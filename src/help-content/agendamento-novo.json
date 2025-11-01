@@ -1,0 +1,21 @@
+{
+  "title": "Ajuda - Novo Agendamento",
+  "sections": [
+    {
+      "title": "O que é este formulário?",
+      "text": "Este é o formulário de 'Novo Agendamento'. Ele permite marcar uma nova consulta no calendário de forma rápida, sem sair da tela da agenda."
+    },
+    {
+      "title": "Preenchendo as Informações",
+      "text": "Para criar um agendamento, siga estes passos:\n1. **Tutor:** Comece a digitar o nome do tutor no campo 'Digite para buscar o tutor...'. O sistema mostrará sugestões para você selecionar.\n2. **Animal:** Após selecionar um tutor, o campo 'Selecione um animal' será habilitado e mostrará apenas os animais que pertencem àquele tutor.\n3. **Veterinário:** Escolha o profissional que realizará o atendimento na lista 'Selecione um veterinário'.\n4. **Dia:** Selecione a data desejada para a consulta (ex: '01/11/2025')."
+    },
+    {
+      "title": "Como Funciona o Horário?",
+      "text": "O campo 'Selecione um horário' é dinâmico. Após você selecionar um **Veterinário** e um **Dia**, o sistema irá consultar a agenda daquele profissional e mostrará **apenas os horários disponíveis** para a data escolhida. Horários já ocupados não aparecerão na lista."
+    },
+    {
+      "title": "Finalizando o Agendamento",
+      "text": "Após preencher todos os campos, clique em 'Salvar' para confirmar o agendamento. O novo evento aparecerá imediatamente no calendário. Se mudar de ideia, clique em 'Cancelar'."
+    }
+  ]
+}

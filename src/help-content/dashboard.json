@@ -1,0 +1,21 @@
+{
+  "title": "Ajuda - Página Inicial (Dashboard)",
+  "sections": [
+    {
+      "title": "O que é esta página?",
+      "text": "A tela de Início é o seu painel de controle (Dashboard). Ela fornece uma visão rápida e em tempo real das atividades da clínica para o dia atual, Sábado, 1 de novembro de 2025."
+    },
+    {
+      "title": "Resumo Diário",
+      "text": "Os cartões no topo da página mostram um resumo das consultas do dia. Isso inclui: \n* **Agendamentos:** O número total de horários marcados para hoje. \n* **Confirmados:** Quantos desses agendamentos já foram confirmados pelo cliente. \n* **Atendidos:** Quantas consultas já foram finalizadas e salvas no sistema hoje. \n* **Faltas:** O número de agendamentos onde o cliente foi marcado como 'não compareceu'."
+    },
+    {
+      "title": "Próximas Consultas do Dia",
+      "text": "Esta lista mostra todos os agendamentos que ainda vão acontecer hoje. Você pode ver o horário, o nome do animal, do tutor, o veterinário responsável e o status atual do agendamento. Se a lista estiver vazia, significa que não há mais consultas para hoje, como mostra a mensagem 'Nenhuma consulta agendada para a seleção atual.'."
+    },
+    {
+      "title": "Visão do Administrador vs. Veterinário",
+      "text": "A informação exibida nesta página é personalizada. Se você está logado como **Administrador** ou **Recepção**, você verá os dados de **toda a clínica**. Se você está logado como **Veterinário** (como 'Dr. José Lauro' no exemplo), o painel mostrará por padrão apenas os números e as consultas **da sua própria agenda**."
+    }
+  ]
+}

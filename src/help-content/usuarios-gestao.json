@@ -1,0 +1,21 @@
+{
+  "title": "Ajuda - Gerenciamento de Acessos",
+  "sections": [
+    {
+      "title": "O que é esta página?",
+      "text": "Esta é a página de 'Gerenciamento de Acessos', uma área restrita para Administradores (como o usuário 'admin' logado). Nela, você pode gerenciar todas as contas de login do sistema e os perfis profissionais dos veterinários."
+    },
+    {
+      "title": "As Duas Abas de Gerenciamento",
+      "text": "A página é dividida em duas seções principais:\n* **Usuários do Sistema:** Lista todas as *contas de login* do sistema (ex: 'admin', 'dr.jose'). É aqui que você define quem pode acessar o sistema e qual o seu nível de permissão (Admin, Veterinário ou Padrão).\n* **Perfis de Veterinário:** Lista os *perfis profissionais* dos veterinários (ex: 'Dr. José Lauro'), que contêm informações como nome completo e CRMV."
+    },
+    {
+      "title": "Como Criar um Usuário Veterinário (Fluxo Correto)",
+      "text": "Para criar um login de veterinário, existe um fluxo obrigatório de duas etapas:\n1. **Crie o Perfil Profissional:** Primeiro, vá para a aba 'Perfis de Veterinário' e clique em '+ Novo Perfil Vet'. Preencha o nome e o CRMV do profissional.\n2. **Crie a Conta de Login:** Depois que o perfil estiver criado, vá para a aba 'Usuários do Sistema', clique em '+ Novo Usuário', selecione o tipo 'Veterinário' e vincule este login ao perfil profissional que você acabou de criar."
+    },
+    {
+      "title": "Outras Ações",
+      "text": "* **Novo Usuário Padrão:** Para criar um usuário 'Padrão' (como uma recepcionista), basta clicar em '+ Novo Usuário' e preencher os dados. Este tipo de usuário não precisa de um perfil de veterinário.\n* **Editar e Excluir:** Você pode editar as informações ou desativar (excluir) qualquer usuário ou perfil de veterinário usando os ícones de lápis (editar) e lixeira (excluir) ao lado de cada nome."
+    }
+  ]
+}

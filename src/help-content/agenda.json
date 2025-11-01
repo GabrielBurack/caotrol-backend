@@ -1,0 +1,29 @@
+{
+  "title": "Ajuda - Agenda de Consultas",
+  "sections": [
+    {
+      "title": "O que é esta página?",
+      "text": "Esta é a agenda principal da clínica, onde você pode visualizar e gerenciar todos os horários. Ela funciona como um calendário interativo."
+    },
+    {
+      "title": "Navegação e Visualização",
+      "text": "Você pode alterar a forma como vê o calendário usando os botões no canto superior direito para alternar entre 'Mês', 'Semana' e 'Dia'. Use as setas '<' e '>' para navegar entre os períodos e o botão 'Hoje' para retornar rapidamente ao dia atual."
+    },
+    {
+      "title": "Como Criar um Novo Agendamento?",
+      "text": "Existem duas maneiras de criar um novo agendamento:\n1. Clicando no botão verde '+ Novo Agendamento'.\n2. Clicando diretamente em um horário vago na grade do calendário.\nAmbas as ações abrirão um formulário para você preencher os dados."
+    },
+    {
+      "title": "Gerenciando um Agendamento Existente",
+      "text": "Ao clicar em um agendamento já marcado (como o de 'Nina - Maria Clara Souza'), um modal de 'Detalhes do Agendamento' será exibido. Este modal mostra as informações principais e os botões de ação."
+    },
+    {
+      "title": "Ações Disponíveis no Modal",
+      "text": "No modal de detalhes, você pode:\n* **Confirmar:** Mudar o status para 'Confirmada', indicando que o tutor deu certeza que virá.\n* **Iniciar Consulta:** Ação principal. Abre a tela de atendimento para registrar os dados clínicos da consulta (anamnese, diagnóstico, etc.).\n* **Cancelar Agendamento:** Remove o agendamento da agenda, liberando o horário.\n* **Marcar Falta:** Se o horário do agendamento já passou e o cliente não compareceu, esta opção aparecerá para registrar a falta."
+    },
+    {
+      "title": "Visão do Administrador vs. Veterinário",
+      "text": "A agenda é personalizada. Se você for um **Administrador**, verá os horários de todos os veterinários. Se for um **Veterinário** (como 'Dr. José Lauro'), a agenda mostrará por padrão apenas os seus agendamentos, mas você pode ter filtros para ver os de outros colegas."
+    }
+  ]
+}

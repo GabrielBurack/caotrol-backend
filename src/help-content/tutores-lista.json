@@ -1,0 +1,29 @@
+{
+  "title": "Ajuda - Página de Tutores",
+  "sections": [
+    {
+      "title": "O que é esta página?",
+      "text": "Esta é a central de gerenciamento de tutores. Nela, você pode ver a lista de todos os clientes cadastrados na clínica, buscar por clientes específicos e iniciar o cadastro de novos tutores."
+    },
+    {
+      "title": "Como Adicionar um Novo Tutor?",
+      "text": "Para cadastrar um novo cliente, clique no botão verde '+ Novo Tutor' localizado no canto superior direito da tela. Você será redirecionado para o formulário de cadastro."
+    },
+    {
+      "title": "Como Encontrar um Tutor?",
+      "text": "Use a barra de 'Buscar por nome ou CPF...' para filtrar a lista. Conforme você digita, a lista de tutores (como 'Bruno Pereira' ou 'Mariana Rodrigues') será atualizada automaticamente para mostrar apenas os resultados que correspondem à sua busca."
+    },
+    {
+      "title": "Como Ordenar a Lista?",
+      "text": "Você pode reorganizar a lista de tutores usando a caixa 'Ordenar por'. As opções disponíveis são 'Mais Recentes' (padrão), 'A-Z' (ordem alfabética) e 'Z-A' (ordem alfabética inversa)."
+    },
+    {
+      "title": "Como Ver ou Editar um Tutor?",
+      "text": "Para ver os detalhes completos de um tutor ou para editar suas informações (como endereço ou telefone), clique no link 'Ver detalhes' ao lado do nome dele."
+    },
+    {
+      "title": "Navegação (Paginação)",
+      "text": "Se houver muitos tutores cadastrados, a lista será dividida em várias páginas. Você pode usar os botões 'Anterior' e 'Próxima' na parte inferior da tela para navegar entre as páginas."
+    }
+  ]
+}

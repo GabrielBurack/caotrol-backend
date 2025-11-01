@@ -1,0 +1,21 @@
+{
+  "title": "Ajuda - Tela de Login",
+  "sections": [
+    {
+      "title": "Como Acessar o Sistema?",
+      "text": "Para entrar no sistema, digite seu 'Login' e 'Senha' nos campos indicados e clique no botão 'Entrar'."
+    },
+    {
+      "title": "Requisito: Verificação de E-mail",
+      "text": "Importante: Só é possível realizar o login após o usuário ter confirmado seu e-mail. Se você é um novo usuário ou acabou de se cadastrar, verifique sua caixa de entrada e clique no link de verificação que enviamos."
+    },
+    {
+      "title": "Login ou Senha Inválidos",
+      "text": "Se você receber a mensagem 'Login ou senha inválidos', verifique se digitou seus dados corretamente. O sistema diferencia letras maiúsculas de minúsculas no login e na senha."
+    },
+    {
+      "title": "Esqueceu a Senha?",
+      "text": "Caso não se lembre da sua senha, clique no link 'Esqueceu a senha?'. Uma tela aparecerá para que você digite seu e-mail de cadastro. Você receberá um link por e-mail para criar uma nova senha."
+    }
+  ]
+}

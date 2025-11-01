@@ -1,0 +1,29 @@
+{
+  "title": "Ajuda - Tela de Nova Consulta",
+  "sections": [
+    {
+      "title": "O que é esta página?",
+      "text": "Esta é a tela de 'Nova Consulta', onde o veterinário registra todas as informações clínicas do atendimento. Ela funciona como o prontuário digital do animal para o dia de hoje."
+    },
+    {
+      "title": "Informações do Paciente",
+      "text": "No topo, você vê um resumo do paciente, seu tutor, raça, sexo e idade. O botão 'Ver Prontuário' permite que você acesse o histórico completo de consultas e dados desse animal."
+    },
+    {
+      "title": "Anamnese",
+      "text": "A seção 'Anamnese' contém o histórico de saúde do animal. Por padrão, ela mostra os dados da última consulta. Ao clicar em 'Editar', o sistema permite que você atualize as informações (como 'Castrado?', 'Alergias') para esta nova consulta, mantendo o histórico anterior salvo."
+    },
+    {
+      "title": "Sinais Vitais e Avaliação Clínica",
+      "text": "Estas seções são para o registro do exame físico ('Sinais Vitais') e da avaliação principal ('Avaliação Clínica'). Preencha os campos como 'Peso', 'Temperatura', 'Queixa Principal', 'Suspeita Clínica', 'Diagnóstico' e 'Tratamento' para formar o prontuário do dia."
+    },
+    {
+      "title": "Ações de Atendimento (Botões de Rodapé)",
+      "text": "Os botões no rodapé abrem modais para registrar informações específicas:\n* **Prescrições:** Abre um modal para visualizar o histórico de receitas e adicionar novas prescrições. Ao salvar, o sistema irá gerar um PDF do receituário para impressão.\n* **Exames:** Abre um modal para visualizar o histórico de exames anteriores e solicitar novos exames laboratoriais ou de imagem.\n* **Vacinas:** Abre um modal que funciona como a carteirinha de vacinação. Você pode ver o histórico e registrar novas vacinas."
+    },
+    {
+      "title": "Salvando a Consulta",
+      "text": "Após preencher todos os dados e adicionar os itens necessários, clique em 'Salvar Consulta'. Isso finalizará o atendimento e salvará todas as informações (anamnese, prescrições, exames, etc.) permanentemente no histórico do animal."
+    }
+  ]
+}

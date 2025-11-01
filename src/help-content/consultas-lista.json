@@ -1,0 +1,29 @@
+{
+  "title": "Ajuda - Histórico de Consultas",
+  "sections": [
+    {
+      "title": "O que é esta página?",
+      "text": "Esta é a página de Consultas, onde você pode gerenciar e visualizar o histórico completo de todos os atendimentos já realizados na clínica. É o prontuário central de todos os pacientes."
+    },
+    {
+      "title": "O que é uma 'Nova Consulta'?",
+      "text": "O botão '+ Nova Consulta' é usado para registrar uma consulta de 'encaixe', ou seja, um atendimento que aconteceu sem um agendamento prévio no calendário."
+    },
+    {
+      "title": "Como Filtrar o Histórico?",
+      "text": "Você pode filtrar o histórico de várias maneiras para encontrar um atendimento específico:\n* **Busca Rápida:** Use a barra 'Buscar por animal, tutor ou CPF'.\n* **Filtro por Período:** Use os campos 'De:' e 'Até:' para ver apenas as consultas realizadas dentro de um intervalo de datas."
+    },
+    {
+      "title": "Como Ordenar a Lista?",
+      "text": "A lista mostra um resumo de cada consulta, incluindo a data (ex: '21/10/2025 às 22:15'), animal, tutor e veterinário. Você pode reordenar a lista usando a caixa 'Ordenar por:', escolhendo entre 'Mais recentes' (padrão) e 'Mais antigas'."
+    },
+    {
+      "title": "Como Ver os Detalhes da Consulta?",
+      "text": "Para ver todos os detalhes de um atendimento específico (como a anamnese, diagnóstico, tratamento, prescrições e exames), clique no ícone do olho (👁) na coluna 'AÇÕES'."
+    },
+    {
+      "title": "Navegação (Paginação)",
+      "text": "Se houver muitas consultas registradas, o histórico será dividido em várias páginas. Use os botões 'Anterior' e 'Próxima' na parte inferior para navegar entre as páginas (ex: 'Página 1 de 4')."
+    }
+  ]
+}

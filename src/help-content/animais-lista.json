@@ -1,0 +1,29 @@
+{
+  "title": "Ajuda - Página de Animais",
+  "sections": [
+    {
+      "title": "O que é esta página?",
+      "text": "Esta é a tela de gerenciamento de pacientes. Aqui você pode visualizar todos os animais (pacientes) cadastrados na clínica, adicionar novos pacientes e buscar por animais específicos."
+    },
+    {
+      "title": "Como Adicionar um Novo Animal?",
+      "text": "Para cadastrar um novo paciente, clique no botão verde '+ Novo Animal' no canto superior direito. Você será levado ao formulário de cadastro de animais."
+    },
+    {
+      "title": "Como Encontrar um Animal?",
+      "text": "A barra de busca permite 'Buscar por nome do animal ou tutor...'. Você pode digitar o nome do paciente (ex: 'Lua') ou o nome do seu tutor (ex: 'Bruno Pereira') para filtrar a lista rapidamente."
+    },
+    {
+      "title": "Como Ordenar a Lista?",
+      "text": "Você pode reorganizar a lista de animais usando a caixa 'Ordenar por'. As opções incluem 'Mais Recentes' (padrão), 'Mais Antigos', 'A-Z' (ordem alfabética) e 'Z-A' (ordem alfabética inversa)."
+    },
+    {
+      "title": "Como Ver ou Editar um Animal?",
+      "text": "Para ver o prontuário completo de um animal, editar suas informações (como raça, data de nascimento) ou ver seu histórico de consultas, clique no link 'Ver detalhes'."
+    },
+    {
+      "title": "Navegação (Paginação)",
+      "text": "Se houver muitos animais cadastrados, a lista será dividida em várias páginas. Você pode usar os botões 'Anterior' e 'Próxima' na parte inferior da tela para navegar entre as páginas, como 'Página 1 de 4'."
+    }
+  ]
+}

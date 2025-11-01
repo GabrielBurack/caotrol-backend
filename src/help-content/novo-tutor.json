@@ -1,0 +1,25 @@
+{
+  "title": "Ajuda - Formulário de Novo Tutor",
+  "sections": [
+    {
+      "title": "O que é este formulário?",
+      "text": "Este é o formulário de cadastro de 'Novo Tutor'. Aqui você registra um novo cliente no sistema, preenchendo suas informações pessoais e de endereço."
+    },
+    {
+      "title": "Dados Pessoais",
+      "text": "Na seção 'Dados Pessoais', preencha o 'Nome Completo', 'CPF', 'Telefone' e 'Data de Nascimento' do cliente."
+    },
+    {
+      "title": "Endereço: Preenchimento Automático (via CEP)",
+      "text": "Para preencher o 'Endereço', a forma mais rápida é digitar o 'CEP' do cliente no campo 'CEP'. Ao fazer isso, o sistema irá buscar automaticamente e preencher os campos 'Estado', 'Cidade', 'Rua' e 'Bairro' para você."
+    },
+    {
+      "title": "Endereço: Preenchimento Manual",
+      "text": "Se o cliente não souber o CEP, você pode preencher o endereço manualmente. Para isso, pule o campo CEP e clique em 'Estado' para selecionar a UF. Em seguida, o campo 'Cidade' será ativado, permitindo que você 'Digite para buscar' a cidade correta. Por fim, preencha a 'Rua', 'Bairro' e 'Número'."
+    },
+    {
+      "title": "Opções ao Salvar",
+      "text": "Ao finalizar o cadastro, você tem três opções na parte inferior do formulário:\n* **Cancelar:** Fecha este formulário sem salvar nenhuma alteração.\n* **Salvar e Fechar:** Salva o novo tutor no sistema e volta para a lista de tutores.\n* **Salvar e Adicionar Animal:** Esta é a ação mais recomendada para clientes novos. Ela salva o tutor e abre imediatamente o formulário de 'Novo Animal' para você já cadastrar o paciente dele."
+    }
+  ]
+}
