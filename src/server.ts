@@ -69,7 +69,7 @@ app.use("/api", cidadeRouter);
 app.use("/api", estadoRouter);
 app.use("/api", enderecoRouter);
 app.use("/api", documentoRouter);
-app.use('/api', helpRouter);
+app.use("/api", helpRouter);
 
 tarefasAgendadasService.iniciar();
 app.use(errorMiddleware);
