@@ -1,0 +1,21 @@
+{
+  "title": "Ajuda - Formulário de Novo Animal",
+  "sections": [
+    {
+      "title": "O que é este formulário?",
+      "text": "Este é o formulário de cadastro de 'Novo Animal', onde você registra um novo paciente no sistema. Os campos com * são obrigatórios."
+    },
+    {
+      "title": "Seção: Identificação",
+      "text": "Nesta seção, você deve preencher os dados de identificação do paciente:\n* **Nome do Animal:** O nome pelo qual o paciente é chamado (obrigatório).\n* **Tutor:** Você deve buscar e selecionar um tutor já cadastrado, digitando o nome ou CPF dele no campo 'Buscar por nome ou CPF...' (obrigatório). Este passo é obrigatório para vincular o animal ao seu dono.\n* **Espécie e Raça:** Selecione primeiro a 'Espécie' (ex: Cão, Gato) na lista (obrigatório). Após selecionar a espécie, o campo 'Raça' (obrigatório) será ativado, permitindo que você digite para buscar a raça correta."
+    },
+    {
+      "title": "Seção: Características",
+      "text": "Nesta seção, você preenche as características físicas e comportamentais do animal:\n* **Sexo:** Selecione 'Macho' ou 'Fêmea' (obrigatório).\n* **Data de Nascimento:** Informe a data de nascimento do animal (obrigatório).\n* **Porte e Temperamento:** Estes campos são opcionais e ajudam a classificar o animal. Você pode deixar como 'Não informado' se desejar."
+    },
+    {
+      "title": "Opções ao Salvar",
+      "text": "Ao finalizar o preenchimento, você tem três opções na parte inferior do formulário:\n* **Cancelar:** Fecha o formulário e descarta todas as informações.\n* **Salvar e Concluir:** Salva o novo animal e te leva de volta para a lista de animais.\n* **Salvar e Adicionar Outro:** Salva o animal atual e limpa o formulário, permitindo que você cadastre outro animal em sequência (útil para quem tem vários pets)."
+    }
+  ]
+}
