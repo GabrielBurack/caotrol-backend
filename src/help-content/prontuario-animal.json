@@ -1,0 +1,21 @@
+{
+  "title": "Ajuda - Prontuário do Animal",
+  "sections": [
+    {
+      "title": "O que é esta página?",
+      "text": "Esta é o 'Prontuário' do animal, a ficha médica completa de um paciente específico. A página é dividida entre as informações de identificação do animal e seu histórico de atendimentos."
+    },
+    {
+      "title": "Ações Principais (Botões Superiores)",
+      "text": "No topo da página, você tem três botões de ação para gerenciar este paciente:\n* **Voltar:** Retorna para a lista de todos os animais.\n* **Excluir Animal:** Desativa este paciente do sistema. Esta ação o tornará inativo, mas seu histórico será preservado.\n* **Editar Animal:** Abre o formulário de cadastro de animal, permitindo que você altere os dados de identificação, como nome, raça, porte ou data de nascimento."
+    },
+    {
+      "title": "Ficha do Animal",
+      "text": "A caixa da esquerda, 'Ficha do Animal', exibe um resumo dos dados de identificação do paciente que não mudam com frequência, como 'Tutor', 'Espécie', 'Raça', 'Sexo', 'Idade' e 'Porte'."
+    },
+    {
+      "title": "Histórico Clínico (Abas)",
+      "text": "A caixa da direita contém todo o histórico de atividades do paciente, organizado em abas:\n* **Consultas:** Lista todas as consultas que o animal já teve, com a data, queixa e diagnóstico. Clicar em uma delas leva aos detalhes completos daquele atendimento.\n* **Prescrições:** Mostra um histórico de todos os medicamentos e receitas já prescritos para este animal.\n* **Exames:** Lista todas as solicitações de exames. É nesta aba que você pode **adicionar o 'Resultado'** de um exame que retornou do laboratório, anexando-o ao registro da solicitação.\n* **Vacinas:** Funciona como a carteirinha de vacinação digital do animal. É aqui que você pode **'Adicionar Nova Vacina'** para registrar doses aplicadas, reforços e datas."
+    }
+  ]
+}

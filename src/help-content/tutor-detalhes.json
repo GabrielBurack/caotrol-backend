@@ -1,0 +1,21 @@
+{
+  "title": "Ajuda - Ficha do Tutor",
+  "sections": [
+    {
+      "title": "O que é esta página?",
+      "text": "Esta é a 'Ficha do Tutor', uma página que mostra todas as informações de um cliente específico. Ela é dividida em informações do cliente e a lista de seus animais."
+    },
+    {
+      "title": "Ações do Tutor",
+      "text": "No topo da página, você tem três botões de ação para gerenciar este tutor:\n* **Voltar:** Retorna para a lista de todos os tutores.\n* **Editar Tutor:** Abre o formulário de cadastro (similar ao de 'Novo Tutor') com os dados do tutor selecionado já preenchidos, permitindo que você atualize informações como telefone ou endereço.\n* **Excluir Tutor:** Desativa este tutor do sistema. Esta ação também irá desativar todos os animais associados a ele."
+    },
+    {
+      "title": "Dados do Tutor",
+      "text": "A caixa da esquerda exibe os 'Dados Pessoais' (CPF, Telefone, Nascimento) e o 'Endereço' (CEP, Cidade/UF, etc.) que estão registrados para este cliente."
+    },
+    {
+      "title": "Box 'Animais'",
+      "text": "A caixa da direita, 'Animais', mostra todos os pacientes que estão vinculados a este tutor.\n* **Adicionar Animal:** O botão '+ Adicionar Animal' permite cadastrar um novo paciente rapidamente, já vinculando-o automaticamente ao tutor.\n* **Ver Prontuário:** O botão 'Ver Prontuário' ao lado de cada animal leva você diretamente para a ficha de detalhes daquele paciente, onde você pode ver seu histórico de consultas, vacinas, etc."
+    }
+  ]
+}
