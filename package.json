@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx prisma migrate deploy && npx prisma generate && npx tsc && copyfiles src/help-content/*.json dist/help-content",
+    "build": "npx prisma migrate deploy && npx prisma generate && npx tsc && npx copyfiles src/help-content/*.json dist/help-content",
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules src/server.ts"
   },
