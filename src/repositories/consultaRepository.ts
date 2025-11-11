@@ -67,9 +67,9 @@ async findById(id: number) {
 
     if (busca) {
       where.OR = [
-        { animal: { nome: { contains: busca, mode: "insensitive" } } },
+        { animal: { nome: { contains: busca} } },
         {
-          animal: { tutor: { nome: { contains: busca, mode: "insensitive" } } },
+          animal: { tutor: { nome: { contains: busca} } },
         },
         { animal: { tutor: { cpf: { contains: busca } } } },
       ];
@@ -119,10 +119,10 @@ async findById(id: number) {
 
     if (busca) {
       where.OR = [
-        { animal: { nome: { contains: busca, mode: "insensitive" } } },
+        { animal: { nome: { contains: busca} } },
         // --- E A MESMA CORREÇÃO AQUI ---
         {
-          animal: { tutor: { nome: { contains: busca, mode: "insensitive" } } },
+          animal: { tutor: { nome: { contains: busca} } },
         },
         { animal: { tutor: { cpf: { contains: busca } } } },
       ];

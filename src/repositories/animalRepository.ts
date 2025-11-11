@@ -28,7 +28,6 @@ class AnimalRepository {
     if (busca) {
       where.nome = {
         contains: busca,
-        mode: 'insensitive',
       };
     }
 
@@ -66,7 +65,6 @@ class AnimalRepository {
     if (busca) {
       where.nome = {
         contains: busca,
-        mode: 'insensitive',
       };
     }
 

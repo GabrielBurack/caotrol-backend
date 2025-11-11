@@ -4,8 +4,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-"build": "npx prisma migrate deploy && npx prisma generate && npx tsc && npx copyfiles -u 1 \"src/help-content/**/*.json\" dist",    "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules src/server.ts"
+    "build": "npx prisma migrate deploy && npx prisma generate && npx tsc && npx copyfiles -u 1 \"src/help-content/**/*.json\" dist",
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules src/server.ts",
+    "postinstall": "npm run build"
   },
   "prisma": {
     "seed": "ts-node src/seed.ts"
@@ -42,10 +44,10 @@
     "express-formidable": "^1.2.0",
     "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.15.3",
     "node-cron": "^4.2.0",
     "nodemailer": "^7.0.6",
     "pdfkit": "^0.17.2",
-    "pg": "^8.16.2",
     "swagger-ui-express": "^5.0.1"
   }
 }

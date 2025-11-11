@@ -34,7 +34,6 @@ class EspecieRepository {
             where: {
                 nome: {
                     equals: name,
-                    mode: 'insensitive' 
                 }
             }
         });

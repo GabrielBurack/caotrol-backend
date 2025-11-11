@@ -19,8 +19,7 @@ class CidadeRepository {
 
     if (busca) {
       where.nome = {
-        contains: busca,
-        mode: 'insensitive', 
+        contains: busca, 
       };
     }
 
@@ -43,7 +42,7 @@ class CidadeRepository {
   async findByNomeAndEstado(nome: string, id_estado: number): Promise<cidade | null> {
   return prisma.cidade.findFirst({
     where: {
-      nome: { equals: nome, mode: 'insensitive' }, // Busca exata, ignorando maiúsculas
+      nome: { equals: nome}, // Busca exata, ignorando maiúsculas
       id_estado: id_estado,
     },
   });

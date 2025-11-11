@@ -21,7 +21,7 @@ class TutorRepository {
     // Lógica de busca dentro da própria função
     if (busca) {
       where.OR = [
-        { nome: { contains: busca, mode: 'insensitive' } },
+        { nome: { contains: busca } },
         { cpf: { contains: busca } },
       ];
     }
@@ -60,7 +60,7 @@ class TutorRepository {
         ativo: true,
         // Lógica de busca diretamente na query
         OR: [
-          { nome: { contains: termo, mode: 'insensitive' } },
+          { nome: { contains: termo } },
           { cpf: { contains: termo } }
         ]
       },
@@ -82,7 +82,7 @@ class TutorRepository {
     // Lógica de busca duplicada aqui para a contagem
     if (busca) {
       where.OR = [
-        { nome: { contains: busca, mode: 'insensitive' } },
+        { nome: { contains: busca } },
         { cpf: { contains: busca } },
       ];
     }

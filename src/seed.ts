@@ -114,64 +114,44 @@ async function main() {
   console.log('🏥 Criando dados de exemplo da clínica...');
 
   // --- Veterinários ---
-const drJose = await prisma.veterinario.create({
-  data: {
-    nome: 'Dr. José Lauro',
-    cpf: '11122233344',
-    crmv: 'CRMV-PR-12345',
-  },
-});
-
-// NOVO VETERINÁRIO ADICIONADO
-const draAna = await prisma.veterinario.create({
-  data: {
-    nome: 'Dra. Ana Costa',
-    cpf: '55566677788',
-    crmv: 'CRMV-PR-54321',
-  },
-});
-console.log('- Perfis de veterinários de exemplo criados.');
-
-
-// --- Usuários ---
-const salt = await bcrypt.genSalt(10);
-const senhaPadraoHash = await bcrypt.hash('123456', salt);
-
-const adminUser = await prisma.usuario.create({
-  data: {
-    login: 'admin',
-    email: 'admin@caotrol.com',
-    senha: senhaPadraoHash,
-    tipo: tipo_usuario_enum.admin,
-    email_verificado: true,
-  },
-});
-
-const vetUserJose = await prisma.usuario.create({
-  data: {
-    login: 'dr.jose',
-    email: 'dr.jose@caotrol.com',
-    senha: senhaPadraoHash,
-    tipo: tipo_usuario_enum.veterinario,
-    id_veterinario: drJose.id_veterinario, // Vincula ao Dr. José
-    email_verificado: true,
-  },
-});
-
-// NOVO USUÁRIO VETERINÁRIO ADICIONADO
-const vetUserAna = await prisma.usuario.create({
+  const drJose = await prisma.veterinario.create({
     data: {
-      login: 'dra.ana',
-      email: 'dra.ana@caotrol.com',
+      nome: 'Dr. José Lauro',
+      cpf: '11122233344',
+      crmv: 'CRMV-PR-12345',
+    },
+  });
+
+  console.log('- Perfis de veterinários de exemplo criados.');
+
+
+  // --- Usuários ---
+  const salt = await bcrypt.genSalt(10);
+  const senhaPadraoHash = await bcrypt.hash('123456', salt);
+
+  const adminUser = await prisma.usuario.create({
+    data: {
+      login: 'admin',
+      email: 'admin@caotrol.com',
       senha: senhaPadraoHash,
-      tipo: tipo_usuario_enum.veterinario,
-      id_veterinario: draAna.id_veterinario, // Vincula à Dra. Ana
+      tipo: tipo_usuario_enum.admin,
       email_verificado: true,
     },
-});
+  });
 
-// NOVO USUÁRIO PADRÃO ADICIONADO
-const recepcaoUser = await prisma.usuario.create({
+  const vetUserJose = await prisma.usuario.create({
+    data: {
+      login: 'dr.jose',
+      email: 'dr.jose@caotrol.com',
+      senha: senhaPadraoHash,
+      tipo: tipo_usuario_enum.veterinario,
+      id_veterinario: drJose.id_veterinario, // Vincula ao Dr. José
+      email_verificado: true,
+    },
+  });
+
+  // NOVO USUÁRIO PADRÃO ADICIONADO
+  const recepcaoUser = await prisma.usuario.create({
     data: {
       login: 'recepcao',
       email: 'recepcao@caotrol.com',
@@ -179,99 +159,8 @@ const recepcaoUser = await prisma.usuario.create({
       tipo: tipo_usuario_enum.padrao,
       email_verificado: true,
     },
-});
-console.log('- Usuários de exemplo (admin, veterinários, padrão) criados.');
-
-  // Criar Tutor de exemplo
-  const pontaGrossa = await prisma.cidade.findFirst({ where: { nome: 'Ponta Grossa' } });
-  const tutorExemplo = await prisma.tutor.create({
-    data: {
-      nome: 'Maria Clara Souza',
-      cpf: '99988877766',
-      telefone: '42988776655',
-      id_cidade: pontaGrossa?.id_cidade,
-    },
   });
-  console.log('- Tutor de exemplo criado.');
-
-  // Criar Animal de exemplo
-  const racaSRD = await prisma.raca.findFirst({ where: { nome: 'Sem Raça Definida (SRD)', id_especie: especieCanina.id_especie } });
-  const animalExemplo = await prisma.animal.create({
-    data: {
-      nome: 'Nina',
-      data_nasc: new Date('2022-05-13'),
-      sexo: 'F',
-      id_tutor: tutorExemplo.id_tutor,
-      id_raca: racaSRD!.id_raca,
-    },
-  });
-  console.log('- Animal de exemplo criado.');
-
-  // --- INÍCIO DA NOVA SEÇÃO: CRIAÇÃO DE DADOS EM MASSA ---
-  console.log('🔄 Criando 25 tutores e seus animais...');
-
-  const tutoresCriados = [];
-  const animaisCriados = [];
-
-  for (let i = 0; i < 25; i++) {
-    // Criação do Tutor
-    const nomeCompleto = `${getRandomItem(primeirosNomes)} ${getRandomItem(sobrenomes)}`;
-    const novoTutor = await prisma.tutor.create({
-      data: {
-        nome: nomeCompleto,
-        cpf: String(Math.floor(10000000000 + Math.random() * 90000000000)), // Gera um CPF numérico aleatório de 11 dígitos
-        telefone: `429${String(Math.floor(10000000 + Math.random() * 90000000))}`, // Gera um telefone aleatório
-        id_cidade: getRandomItem(todasCidades).id_cidade,
-      },
-    });
-    tutoresCriados.push(novoTutor);
-
-    // Criação de 1 ou 2 animais para cada tutor
-    const numeroDeAnimais = Math.floor(Math.random() * 2) + 1; // 1 ou 2
-    for (let j = 0; j < numeroDeAnimais; j++) {
-      const especieAleatoria = Math.random() > 0.4 ? especieCanina : especieFelina; // 60% cães, 40% gatos
-      const racasDaEspecie = todasRacas.filter(r => r.id_especie === especieAleatoria.id_especie);
-
-      const novoAnimal = await prisma.animal.create({
-        data: {
-          nome: getRandomItem(nomesAnimais),
-          data_nasc: getRandomDate(new Date(2015, 0, 1), new Date()), // Nascido entre 2015 e hoje
-          sexo: Math.random() > 0.5 ? 'M' : 'F',
-          id_tutor: novoTutor.id_tutor,
-          id_raca: getRandomItem(racasDaEspecie).id_raca,
-        },
-      });
-      animaisCriados.push(novoAnimal);
-    }
-  }
-  console.log(`✅ ${tutoresCriados.length} novos tutores e ${animaisCriados.length} novos animais criados.`);
-
-  // Criação de 30 consultas aleatórias
-   console.log('🔄 Criando 30 consultas aleatórias (modelo atualizado)...');
-  const consultasCriadas = [];
-  for (let k = 0; k < 30; k++) {
-    // Pega um animal aleatório da lista de animais que acabamos de criar
-    const animalAleatorio = getRandomItem(animaisCriados); 
-    
-    const novaConsulta = await prisma.consulta.create({
-        data: {
-            // CORRIGIDO: O nome do campo agora é 'data'
-            data: getRandomDate(new Date(2024, 0, 1), new Date()),
-            
-            // ADICIONADO: Campo obrigatório 'status'
-            status: status_consulta_enum.finalizada, // Assumindo que este valor existe no seu enum
-            
-            // MANTIDO: Campos obrigatórios de relacionamento
-            id_animal: animalAleatorio.id_animal,
-            id_veterinario: drJose.id_veterinario,
-
-            // REMOVIDO: 'motivo_consulta' e 'diagnostico' agora são opcionais e não foram solicitados.
-        }
-    });
-    consultasCriadas.push(novaConsulta);
-  }
-  console.log(`✅ ${consultasCriadas.length} novas consultas criadas.`);
-  // --- FIM DA NOVA SEÇÃO ---
+  console.log('- Usuários de exemplo (admin, veterinários, padrão) criados.');
 }
 
 main()

@@ -1,0 +1,30 @@
+
+services:
+  # Definimos o nosso serviço de banco de dados
+  db:
+    image: mysql:8.0 # Usamos a imagem oficial do MySQL, versão 8.0
+    container_name: caotrol-mysql-db # Um nome amigável para o contentor
+    restart: always # Sempre reinicia o contentor se ele parar
+
+    # Estas são as variáveis de ambiente para configurar o MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: burackrosa08
+      MYSQL_DATABASE: caotrol_db # O nome do banco de dados que será criado
+      MYSQL_USER: root # O nome do utilizador que a nossa API vai usar
+      MYSQL_PASSWORD: burackrosa08 # A senha para este utilizador
+
+    ports:
+      # Mapeia a porta 3306 do seu computador para a porta 3306 do contentor
+      # É assim que a sua API (no localhost) irá "encontrar" o banco
+      - "3306:3306"
+
+    volumes:
+      # Esta é a parte mais importante:
+      # Garante que os dados do banco sejam guardados numa pasta
+      # no seu computador (chamada 'caotrol-db-data').
+      # Assim, se você parar o contentor, os seus dados não se perdem.
+      - caotrol-db-data:/var/lib/mysql
+
+# Aqui declaramos o "volume" (o local de armazenamento) que usámos acima
+volumes:
+  caotrol-db-data:
