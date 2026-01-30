@@ -58,6 +58,14 @@ class UserRepository {
     });
   }
 
+  // --- ADICIONADO: Método necessário para o Rollback ---
+  async delete(id: number): Promise<usuario> {
+    return prisma.usuario.delete({
+      where: { id_usuario: id },
+    });
+  }
+  // ---------------------------------------------------
+
   async deactivate(id: number): Promise<usuario> {
     const timestamp = new Date().getTime(); 
     
@@ -78,6 +86,7 @@ class UserRepository {
       },
     });
   }
+
   async findByVerificationToken(token: string): Promise<usuario | null> {
     return prisma.usuario.findFirst({
       where: {

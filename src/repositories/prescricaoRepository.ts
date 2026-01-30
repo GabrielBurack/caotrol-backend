@@ -12,15 +12,16 @@ class PrescricaoRepository {
   async findAllByAnimalId(id_animal: number): Promise<prescricao[]> {
     return prisma.prescricao.findMany({
       where: {
-        consulta: { // Filtra as prescrições com base na consulta
-          id_animal: id_animal, // à qual o animal pertence
+        consulta: { 
+          id_animal: id_animal, 
         },
       },
       include: {
-        consulta: { // Inclui dados da consulta para dar contexto (data, vet)
+        consulta: { 
           select: {
             data: true,
-            veterinario: { select: { nome: true } }
+            // ATUALIZADO: Incluindo crmv para poder gerar o PDF corretamente depois
+            veterinario: { select: { nome: true, crmv: true } } 
           }
         }
       },
@@ -45,7 +46,6 @@ class PrescricaoRepository {
     });
   }
 
-  // Busca uma prescrição com todos os dados aninhados necessários para o PDF
   async findByIdComplet(id_prescricao: number) {
     return prisma.prescricao.findUnique({
       where: { id_prescricao },

@@ -21,8 +21,19 @@ class TutorRepository {
     // Lógica de busca dentro da própria função
     if (busca) {
       where.OR = [
-        { nome: { contains: busca } },
-        { cpf: { contains: busca } },
+        { 
+          nome: { 
+            contains: busca, 
+            mode: 'insensitive' // <--- CORREÇÃO AQUI
+          } 
+        },
+        { 
+          cpf: { 
+            contains: busca,
+            mode: 'insensitive'
+            // CPF geralmente não precisa, mas se quiser garantir, pode por também
+          } 
+        },
       ];
     }
 
@@ -60,8 +71,15 @@ class TutorRepository {
         ativo: true,
         // Lógica de busca diretamente na query
         OR: [
-          { nome: { contains: termo } },
-          { cpf: { contains: termo } }
+          { 
+            nome: { 
+              contains: termo, 
+              mode: 'insensitive' // <--- CORREÇÃO PRINCIPAL AQUI (Para o Modal)
+            } 
+          },
+          { 
+            cpf: { contains: termo } 
+          }
         ]
       },
       take: limite,
@@ -82,8 +100,15 @@ class TutorRepository {
     // Lógica de busca duplicada aqui para a contagem
     if (busca) {
       where.OR = [
-        { nome: { contains: busca } },
-        { cpf: { contains: busca } },
+        { 
+          nome: { 
+            contains: busca, 
+            mode: 'insensitive' // <--- CORREÇÃO AQUI TAMBÉM
+          } 
+        },
+        { 
+          cpf: { contains: busca } 
+        },
       ];
     }
 
@@ -130,7 +155,6 @@ class TutorRepository {
       where: { id_tutor: id },
       data: { ativo: false },
     });
-    // **Desativar todos os animais desse tutor**
   }
 
   // (Opcional) Delete real — somente para casos de manutenção/admin
@@ -139,8 +163,6 @@ class TutorRepository {
       where: { id_tutor: id },
     });
   }
-
-  // ?? Perguntar ao professor se precisa de um Reactivate
 }
 
 export default new TutorRepository();
